@@ -1,0 +1,32 @@
+{
+  "name": "database",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "@zenstackhq/runtime": "^2.13.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "^22.0.1",
+    "@tsconfig/node-ts": "^23.6.1",
+    "@types/node": "^22.14.0",
+    "prisma": "^6.5.0",
+    "typescript": "^5.8.2",
+    "zenstack": "^2.13.1"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "build": "pnpm db:generate",
+    "db:deploy": "prisma migrate deploy",
+    "db:generate": "zenstack generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "zenstack": {
+    "schema": "./src/schema.zmodel"
+  }
+}

@@ -1,0 +1,108 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    container_name: ${PROJECT_PREFIX}_traefik
+    command:
+      - --api.insecure=false
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --certificatesresolvers.le.acme.email=support@fearindigo.com.au
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - letsencrypt:/letsencrypt
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_APP}`)
+
+  db:
+    image: postgres
+    container_name: ${PROJECT_PREFIX}_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  localstack:
+    image: gresau/localstack-persist
+    container_name: ${PROJECT_PREFIX}_localstack
+    environment:
+      SERVICES: s3
+      S3_BUCKET: ${S3_BUCKET}
+    volumes:
+      - ./localstack/persist:/persisted-data
+      - ./localstack/init:/etc/localstack/init/ready.d
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.localstack.tls=true
+      - traefik.http.routers.localstack.rule=Host(`localstack.${DOMAIN_APP}`)
+
+  email:
+    image: rnwood/smtp4dev
+    container_name: ${PROJECT_PREFIX}_email
+    environment:
+      ServerOptions__HostName: email
+      ServerOptions__TlsMode: StartTls
+      ServerOptions__Port: ${SMTP_PORT}
+      ServerOptions__Users__0__Username: ${SMTP_USER}
+      ServerOptions__Users__0__Password: ${SMTP_PASS}
+      ServerOptions__Users__0__DefaultMailbox: Default
+    ports:
+      - 1234:80
+    volumes:
+      - email_data:/smtp4dev
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.email.loadbalancer.server.port=80
+      - traefik.http.routers.email.tls=true
+      - traefik.http.routers.email.rule=Host(`email.${DOMAIN_APP}`)
+
+  api:
+    build:
+      dockerfile: dev.dockerfile
+      target: api
+    image: ${PROJECT_PREFIX}_api
+    container_name: ${PROJECT_PREFIX}_api
+    depends_on:
+      - db
+    environment:
+      DOMAIN_APP: ${DOMAIN_APP}
+      DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_HOST: ${SMTP_HOST}
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+    # volumes:
+    #   - .:/usr/app
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.tls=true
+      - traefik.http.routers.api.rule=Host(`api.${DOMAIN_APP}`)
+
+volumes:
+  letsencrypt:
+  pgdata:
+  email_data:

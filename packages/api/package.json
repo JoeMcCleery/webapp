@@ -1,0 +1,26 @@
+{
+  "name": "api",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@zenstackhq/server": "^2.13.0",
+    "database": "workspace:*",
+    "fastify": "^5.2.2",
+    "fastify-plugin": "^5.0.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "^22.0.1",
+    "@tsconfig/node-ts": "^23.6.1",
+    "@types/node": "^22.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node src/index.ts"
+  }
+}
