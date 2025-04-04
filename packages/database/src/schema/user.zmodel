@@ -1,0 +1,10 @@
+import 'base'
+
+model User extends Base {
+  email    String  @unique
+  password String? @password @omit
+  name     String?
+
+  // make user profile public
+  @@allow('read', true)
+}

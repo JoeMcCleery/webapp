@@ -1,3 +1,5 @@
+import "schema/index"
+
 generator client {
   provider = "prisma-client-js"
   output = "../generated/client"
@@ -6,16 +8,4 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URI")
-}
-
-model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String?  @password @omit
-  name      String?
-
-  // make user profile public
-  @@allow('read', true)
 }
