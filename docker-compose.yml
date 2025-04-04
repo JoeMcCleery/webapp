@@ -76,8 +76,7 @@ services:
 
   api:
     build:
-      dockerfile: dev.dockerfile
-      target: api
+      target: api-dev
     image: ${PROJECT_PREFIX}_api
     container_name: ${PROJECT_PREFIX}_api
     depends_on:

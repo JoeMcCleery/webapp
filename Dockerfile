@@ -1,4 +1,5 @@
 FROM node:lts-slim AS base
+RUN apt-get update -y && apt-get install -y openssl
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -14,7 +15,7 @@ COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm build
 
-FROM base AS api
+FROM base AS api-dev
 WORKDIR /usr/app
 COPY --from=build /usr/src/app .
 EXPOSE 3000
