@@ -93,8 +93,11 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
-    # volumes:
-    #   - .:/usr/app
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+      - /usr/app/packages/api/node_modules
+      - /usr/app/packages/database/node_modules
     restart: unless-stopped
     labels:
       - traefik.enable=true

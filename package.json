@@ -13,7 +13,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm run -r build",
-    "dev": "pnpm --filter api dev",
+    "dev": "pnpm --filter database db:push && pnpm --filter api dev",
     "start": "pnpm --filter api start",
     "syncpack:fix": "syncpack set-semver-ranges && syncpack fix-mismatches && syncpack format",
     "syncpack:update": "syncpack update"
