@@ -20,3 +20,9 @@ WORKDIR /usr/app
 COPY --from=build /usr/src/app .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
+
+FROM base AS prisma-studio
+WORKDIR /usr/app
+COPY --from=build /usr/src/app .
+EXPOSE 5555
+CMD [ "pnpm", "prisma:studio"]
