@@ -1,5 +1,5 @@
 {
-  "name": "database",
+  "name": "@libs/db",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -8,8 +8,7 @@
     "@zenstackhq/runtime": "^2.13.1"
   },
   "devDependencies": {
-    "@tsconfig/node-lts": "^22.0.1",
-    "@tsconfig/node-ts": "^23.6.1",
+    "@libs/config": "workspace:*",
     "@types/node": "^22.14.0",
     "prisma": "^6.5.0",
     "typescript": "^5.8.2",

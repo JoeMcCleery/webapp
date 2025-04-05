@@ -13,14 +13,14 @@ importers:
         specifier: ^13.0.3
         version: 13.0.3(typescript@5.8.3)
 
-  packages/api:
+  apps/api:
     dependencies:
+      '@libs/db':
+        specifier: workspace:*
+        version: link:../../libs/db
       '@zenstackhq/server':
         specifier: ^2.13.0
         version: 2.13.1(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3))
-      database:
-        specifier: workspace:*
-        version: link:../database
       fastify:
         specifier: ^5.2.2
         version: 5.2.2
@@ -28,6 +28,9 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
     devDependencies:
+      '@libs/config':
+        specifier: workspace:*
+        version: link:../../libs/config
       '@tsconfig/node-lts':
         specifier: ^22.0.1
         version: 22.0.1
@@ -44,7 +47,9 @@ importers:
         specifier: ^5.8.2
         version: 5.8.3
 
-  packages/database:
+  libs/config: {}
+
+  libs/db:
     dependencies:
       '@prisma/client':
         specifier: ^6.5.0
@@ -53,12 +58,9 @@ importers:
         specifier: ^2.13.1
         version: 2.13.1(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3))
     devDependencies:
-      '@tsconfig/node-lts':
-        specifier: ^22.0.1
-        version: 22.0.1
-      '@tsconfig/node-ts':
-        specifier: ^23.6.1
-        version: 23.6.1
+      '@libs/config':
+        specifier: workspace:*
+        version: link:../config
       '@types/node':
         specifier: ^22.14.0
         version: 22.14.0
