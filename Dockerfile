@@ -1,18 +1,20 @@
+# syntax=docker/dockerfile:1.7-labs
+
 FROM node:lts-slim AS base
 RUN apt-get update -y && apt-get install -y openssl
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-FROM base AS prod-deps
+FROM base AS setup
 WORKDIR /usr/src/app
-COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
+COPY --parents ./packages/*/package.json ./
 
-FROM base AS build
+FROM setup AS build
 WORKDIR /usr/src/app
-COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY . .
 RUN pnpm build
 
 FROM base AS api-dev
