@@ -14,17 +14,23 @@ COPY --parents ./packages/*/package.json ./
 FROM setup AS build
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-COPY . .
+COPY ./ ./
 RUN pnpm build
 
-FROM base AS api-dev
+FROM base AS common
 WORKDIR /usr/app
-COPY --from=build /usr/src/app .
+COPY --from=build /usr/src/app/package.json ./
+COPY --from=build /usr/src/app/node_modules ./node_modules
+
+FROM common AS api
+WORKDIR /usr/app
+COPY --from=build /usr/src/app/packages/api ./packages/api
+COPY --from=build /usr/src/app/packages/database ./packages/database
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
 
-FROM base AS prisma-studio
-WORKDIR /usr/app
-COPY --from=build /usr/src/app .
+FROM common AS prisma-studio
+WORKDIR /usr/app/
+COPY --from=build /usr/src/app/packages/database ./packages/database
 EXPOSE 5555
 CMD [ "pnpm", "prisma:studio"]
