@@ -6,3 +6,6 @@ onlyBuiltDependencies:
   - esbuild
   - prisma
   - zenstack
+syncInjectedDepsAfterScripts:
+  - build
+injectWorkspacePackages: true

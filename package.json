@@ -16,9 +16,6 @@
   "private": true,
   "scripts": {
     "build": "pnpm run -r build",
-    "dev": "pnpm --filter database db:push && pnpm --filter api dev",
-    "prisma:studio": "pnpm --filter database db:studio",
-    "start": "pnpm --filter api start",
     "syncpack:fix": "syncpack set-semver-ranges && syncpack fix-mismatches && syncpack format",
     "syncpack:update": "syncpack update"
   }

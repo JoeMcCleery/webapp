@@ -6,31 +6,24 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-FROM base AS setup
+FROM base AS build
 WORKDIR /usr/src/app
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 COPY --parents ./packages/*/package.json .
-
-FROM setup AS build
-WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
+RUN pnpm deploy --filter=api /deploy/api
+RUN pnpm deploy --filter=database /deploy/database
 
-FROM base AS common
+FROM base AS api
 WORKDIR /usr/app
-COPY --from=build /usr/src/app/package.json .
-COPY --from=build /usr/src/app/node_modules ./node_modules
-
-FROM common AS api
-WORKDIR /usr/app
-COPY --from=build /usr/src/app/packages/api ./packages/api
-COPY --from=build /usr/src/app/packages/database ./packages/database
+COPY --from=build /deploy/api .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
 
-FROM common AS prisma-studio
+FROM base AS prisma-studio
 WORKDIR /usr/app/
-COPY --from=build /usr/src/app/packages/database ./packages/database
+COPY --from=build /deploy/database .
 EXPOSE 5555
-CMD [ "pnpm", "prisma:studio"]
+CMD [ "pnpm", "db:studio"]
