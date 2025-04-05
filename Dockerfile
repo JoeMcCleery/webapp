@@ -9,17 +9,17 @@ RUN corepack enable
 FROM base AS setup
 WORKDIR /usr/src/app
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
-COPY --parents ./packages/*/package.json ./
+COPY --parents ./packages/*/package.json .
 
 FROM setup AS build
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-COPY ./ ./
+COPY . .
 RUN pnpm build
 
 FROM base AS common
 WORKDIR /usr/app
-COPY --from=build /usr/src/app/package.json ./
+COPY --from=build /usr/src/app/package.json .
 COPY --from=build /usr/src/app/node_modules ./node_modules
 
 FROM common AS api
