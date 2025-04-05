@@ -16,7 +16,8 @@
     "zenstack": "^2.13.1"
   },
   "files": [
-    "src"
+    "src",
+    "tsconfig.json"
   ],
   "keywords": [],
   "license": "ISC",
