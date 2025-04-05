@@ -10,12 +10,12 @@ FROM base AS build
 WORKDIR /usr/src/app
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 COPY --parents ./apps/*/package.json .
-COPY --parents ./libs/*/package.json .
+COPY --parents ./packages/*/package.json .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
-RUN pnpm deploy --filter=@apps/api /apps/api
-RUN pnpm deploy --filter=@libs/db /libs/db
+RUN pnpm deploy --filter=@web-app/api /apps/api
+RUN pnpm deploy --filter=@web-app/studio /apps/studio
 
 FROM base AS api
 WORKDIR /usr/app
@@ -23,8 +23,8 @@ COPY --from=build /apps/api .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
 
-FROM base AS prisma-studio
+FROM base AS studio
 WORKDIR /usr/app/
-COPY --from=build /libs/db .
+COPY --from=build /apps/studio .
 EXPOSE 5555
-CMD [ "pnpm", "db:studio"]
+CMD [ "pnpm", "start"]

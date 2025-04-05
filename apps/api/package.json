@@ -1,19 +1,19 @@
 {
-  "name": "@apps/api",
+  "name": "@web-app/api",
   "description": "",
   "version": "1.0.0",
   "author": "",
   "dependencies": {
-    "@libs/db": "workspace:*",
+    "@web-app/db": "workspace:*",
     "@zenstackhq/server": "^2.13.0",
     "fastify": "^5.2.2",
     "fastify-plugin": "^5.0.1"
   },
   "devDependencies": {
-    "@libs/config": "workspace:*",
     "@tsconfig/node-lts": "^22.0.1",
     "@tsconfig/node-ts": "^23.6.1",
     "@types/node": "^22.14.0",
+    "@web-app/config": "workspace:*",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },

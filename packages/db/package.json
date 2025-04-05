@@ -1,5 +1,5 @@
 {
-  "name": "@libs/db",
+  "name": "@web-app/db",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -8,8 +8,8 @@
     "@zenstackhq/runtime": "^2.13.1"
   },
   "devDependencies": {
-    "@libs/config": "workspace:*",
     "@types/node": "^22.14.0",
+    "@web-app/config": "workspace:*",
     "prisma": "^6.5.0",
     "typescript": "^5.8.2",
     "zenstack": "^2.13.1"

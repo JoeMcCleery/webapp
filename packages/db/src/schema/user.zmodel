@@ -1,0 +1,19 @@
+import 'abstract/base'
+
+model User extends Base {
+  email    String  @unique @email
+  password String? @password @omit
+  name     String?
+
+  // make user profile public
+  @@allow('read', true)
+}
+
+model User2 extends Base {
+  email    String  @unique @email
+  password String? @password @omit
+  name     String?
+
+  // make user profile public
+  @@allow('read', true)
+}
