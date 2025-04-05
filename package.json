@@ -6,6 +6,9 @@
   "devDependencies": {
     "syncpack": "^13.0.3"
   },
+  "engines": {
+    "node": ">=22.7.0 "
+  },
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
