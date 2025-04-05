@@ -13,7 +13,7 @@ COPY --parents ./apps/*/package.json .
 COPY --parents ./packages/*/package.json .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm build
+RUN pnpm run -r build
 RUN pnpm deploy --filter=@web-app/api /apps/api
 RUN pnpm deploy --filter=@web-app/studio /apps/studio
 

@@ -15,7 +15,6 @@
   "packageManager": "pnpm@10.7.1",
   "private": true,
   "scripts": {
-    "build": "pnpm run -r build",
     "syncpack:fix": "syncpack set-semver-ranges && syncpack fix-mismatches && syncpack format",
     "syncpack:update": "syncpack update"
   }
