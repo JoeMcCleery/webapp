@@ -1,4 +1,4 @@
-# Ignore generated files
+# generated files
 /src/prisma/schema.prisma
 /src/generated
 *query_engine*

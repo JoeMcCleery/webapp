@@ -3,6 +3,7 @@
 
 # builds
 **/dist
+**/.rslib
 
 # project files
 .git

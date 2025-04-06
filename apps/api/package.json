@@ -25,7 +25,6 @@
   "keywords": [],
   "license": "ISC",
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.7.1",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts"

@@ -8,7 +8,5 @@
   "peerDependencies": {
     "prettier": "^3.5.3"
   },
-  "publishConfig": {
-    "access": "public"
-  }
+  "private": true
 }

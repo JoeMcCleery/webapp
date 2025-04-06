@@ -1,12 +1,6 @@
 packages:
   - apps/*
   - packages/*
-onlyBuiltDependencies:
-  - "@prisma/client"
-  - "@prisma/engines"
-  - esbuild
-  - prisma
-  - zenstack
 syncInjectedDepsAfterScripts:
   - build
 injectWorkspacePackages: true
