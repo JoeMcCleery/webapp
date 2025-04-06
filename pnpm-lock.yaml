@@ -50,12 +50,6 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  apps/studio:
-    dependencies:
-      '@web-app/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-
   packages/db:
     dependencies:
       '@prisma/client':

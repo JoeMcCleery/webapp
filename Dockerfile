@@ -22,9 +22,3 @@ WORKDIR /usr/app
 COPY --from=build /apps/api .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
-
-FROM base AS studio
-WORKDIR /usr/app/
-COPY --from=build /apps/studio .
-EXPOSE 5555
-CMD [ "pnpm", "start"]
