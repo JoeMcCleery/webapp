@@ -1,2 +1,2 @@
-export * from "./client";
-export * from "@zenstackhq/runtime";
+export * from "./client"
+export * from "@zenstackhq/runtime"

@@ -1,6 +1,11 @@
+# dependencies
 **/node_modules
-.git
+
+# builds
 **/dist
+
+# project files
+.git
 .vscode
 localstack
 **/*.env

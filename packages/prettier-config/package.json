@@ -1,0 +1,14 @@
+{
+  "name": "@web-app/prettier-config",
+  "version": "1.0.0",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  },
+  "main": "./.prettierrc.js",
+  "peerDependencies": {
+    "prettier": "^3.5.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

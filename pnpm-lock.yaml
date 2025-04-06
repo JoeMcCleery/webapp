@@ -19,7 +19,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/db
       '@zenstackhq/server':
-        specifier: ^2.13.0
+        specifier: ^2.13.1
         version: 2.13.1(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3))
       fastify:
         specifier: ^5.2.2
@@ -37,14 +37,17 @@ importers:
       '@types/node':
         specifier: ^22.14.0
         version: 22.14.0
-      '@web-app/config':
+      '@web-app/prettier-config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/prettier-config
+      '@web-app/ts-config':
+        specifier: workspace:*
+        version: link:../../packages/ts-config
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
       typescript:
-        specifier: ^5.8.2
+        specifier: ^5.8.3
         version: 5.8.3
 
   apps/studio:
@@ -52,8 +55,6 @@ importers:
       '@web-app/db':
         specifier: workspace:*
         version: link:../../packages/db
-
-  packages/config: {}
 
   packages/db:
     dependencies:
@@ -67,18 +68,29 @@ importers:
       '@types/node':
         specifier: ^22.14.0
         version: 22.14.0
-      '@web-app/config':
+      '@web-app/prettier-config':
         specifier: workspace:*
-        version: link:../config
+        version: link:../prettier-config
+      '@web-app/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
       prisma:
         specifier: ^6.5.0
         version: 6.5.0(typescript@5.8.3)
       typescript:
-        specifier: ^5.8.2
+        specifier: ^5.8.3
         version: 5.8.3
       zenstack:
         specifier: ^2.13.1
         version: 2.13.1(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3))(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3)
+
+  packages/prettier-config:
+    devDependencies:
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+
+  packages/ts-config: {}
 
 packages:
 
@@ -1178,6 +1190,11 @@ packages:
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
+
+  prettier@3.5.3:
+    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   pretty-repl@4.0.1:
     resolution: {integrity: sha512-Ve+ZNS5fwxylks3TTR4su7SaNAHVOh++7J5R8VKFAHIjmAMS8X79rnETc/JJoqay52cfgeHum7vm2+9hFSys9Q==}
@@ -2866,6 +2883,8 @@ snapshots:
   pluralize@8.0.0: {}
 
   possible-typed-array-names@1.1.0: {}
+
+  prettier@3.5.3: {}
 
   pretty-repl@4.0.1:
     dependencies:
