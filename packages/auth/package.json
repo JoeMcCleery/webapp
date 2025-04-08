@@ -1,0 +1,19 @@
+{
+  "name": "@web-app/auth",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@web-app/db": "workspace:*",
+    "@web-app/prettier-config": "workspace:*",
+    "@web-app/ts-config": "workspace:*",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "src"
+  ],
+  "main": "src/index.ts",
+  "private": true,
+  "type": "module"
+}

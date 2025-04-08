@@ -50,6 +50,24 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/auth:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.14.0
+        version: 22.14.0
+      '@web-app/db':
+        specifier: workspace:*
+        version: link:../db
+      '@web-app/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@web-app/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/db:
     dependencies:
       '@prisma/client':
@@ -67,10 +85,10 @@ importers:
         version: 22.14.0
       '@web-app/prettier-config':
         specifier: workspace:*
-        version: file:packages/prettier-config(prettier@3.5.3)
+        version: link:../prettier-config
       '@web-app/ts-config':
         specifier: workspace:*
-        version: file:packages/ts-config
+        version: link:../ts-config
       prisma:
         specifier: ^6.5.0
         version: 6.5.0(typescript@5.8.3)
@@ -413,14 +431,6 @@ packages:
 
   '@types/node@22.14.0':
     resolution: {integrity: sha512-Kmpl+z84ILoG+3T/zQFyAJsU6EPTmOCj8/2+83fSN6djd6I4o7uOuGIH6vq3PrjY5BGitSbFuMN18j3iknubbA==}
-
-  '@web-app/prettier-config@file:packages/prettier-config':
-    resolution: {directory: packages/prettier-config, type: directory}
-    peerDependencies:
-      prettier: ^3.5.3
-
-  '@web-app/ts-config@file:packages/ts-config':
-    resolution: {directory: packages/ts-config, type: directory}
 
   '@zenstackhq/language@2.13.1':
     resolution: {integrity: sha512-b+VVFmru1hM0QIlLdVOjVAZeKvDOoPD3Whx6+3Bk9cyYVk90i/GwVfTJzSB8NeXokYhXKPcyr4buKBdbE4BX+Q==}
@@ -2072,12 +2082,6 @@ snapshots:
   '@types/node@22.14.0':
     dependencies:
       undici-types: 6.21.0
-
-  '@web-app/prettier-config@file:packages/prettier-config(prettier@3.5.3)':
-    dependencies:
-      prettier: 3.5.3
-
-  '@web-app/ts-config@file:packages/ts-config': {}
 
   '@zenstackhq/language@2.13.1':
     dependencies:

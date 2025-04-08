@@ -1,8 +1,6 @@
 {
   "name": "@web-app/api",
-  "description": "",
   "version": "1.0.0",
-  "author": "",
   "dependencies": {
     "@web-app/db": "workspace:*",
     "@zenstackhq/server": "^2.13.1",
@@ -19,11 +17,8 @@
     "typescript": "^5.8.3"
   },
   "files": [
-    "src",
-    "tsconfig.json"
+    "src"
   ],
-  "keywords": [],
-  "license": "ISC",
   "main": "src/index.ts",
   "private": true,
   "scripts": {
