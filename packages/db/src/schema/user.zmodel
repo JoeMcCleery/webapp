@@ -1,10 +1,16 @@
 import 'abstract/base'
 
 model User extends Base {
-  email    String  @unique @email
-  password String? @password @omit
-  name     String?
+  name     String
+  email    String    @email @unique
+  password String    @password @omit
 
-  // make user profile public
-  @@allow('read', true)
+  sessions Session[]
+}
+
+model Session extends Base {
+  expiresAt DateTime
+  userId    String   @db.Uuid
+
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }

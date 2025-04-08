@@ -3,8 +3,11 @@
   "description": "",
   "version": "1.0.0",
   "author": "",
+  "dependencies": {
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0"
+  },
   "devDependencies": {
-    "@types/node": "^22.14.0",
     "@web-app/db": "workspace:*",
     "@web-app/prettier-config": "workspace:*",
     "@web-app/ts-config": "workspace:*",

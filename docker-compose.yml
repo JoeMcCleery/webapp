@@ -79,8 +79,6 @@ services:
       target: api
     image: ${PROJECT_PREFIX}_api
     container_name: ${PROJECT_PREFIX}_api
-    depends_on:
-      - db
     environment:
       DOMAIN_APP: ${DOMAIN_APP}
       DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
@@ -101,6 +99,19 @@ services:
       - traefik.enable=true
       - traefik.http.routers.api.tls=true
       - traefik.http.routers.api.rule=Host(`api.${DOMAIN_APP}`)
+
+  cms:
+    build:
+      target: cms
+    image: ${PROJECT_PREFIX}_cms
+    container_name: ${PROJECT_PREFIX}_cms
+    environment:
+      DOMAIN_APP: ${DOMAIN_APP}
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cms.tls=true
+      - traefik.http.routers.cms.rule=Host(`cms.${DOMAIN_APP}`)
 
 volumes:
   letsencrypt:

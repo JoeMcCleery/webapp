@@ -6,8 +6,6 @@
     "@zenstackhq/runtime": "^2.13.1"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.52.3",
-    "@types/node": "^22.14.0",
     "@web-app/prettier-config": "workspace:*",
     "@web-app/ts-config": "workspace:*",
     "prisma": "^6.5.0",

@@ -1,0 +1,25 @@
+{
+  "name": "@web-app/cms",
+  "dependencies": {
+    "@nuxt/fonts": "^0.11.1",
+    "@nuxt/image": "^1.10.0",
+    "@nuxt/ui": "^3.0.2",
+    "nuxt": "^3.16.2",
+    "typescript": "^5.8.3",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@web-app/ts-config": "workspace:*",
+    "@web-app/prettier-config": "workspace:*"
+  },
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --host",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "preview": "nuxt preview"
+  },
+  "type": "module"
+}

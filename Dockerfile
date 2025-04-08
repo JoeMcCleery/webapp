@@ -15,10 +15,16 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run -r build
 RUN pnpm deploy --filter=@web-app/api /apps/api
-RUN pnpm deploy --filter=@web-app/studio /apps/studio
+RUN pnpm deploy --filter=@web-app/cms /apps/cms
 
 FROM base AS api
 WORKDIR /usr/app
 COPY --from=build /apps/api .
+EXPOSE 3000
+CMD [ "pnpm", "dev" ]
+
+FROM base AS cms
+WORKDIR /usr/app
+COPY --from=build /apps/cms .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
