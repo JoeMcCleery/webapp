@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
-FROM node:lts-slim AS base
+FROM node:22.14.0-slim AS base
 RUN apt-get update -y && apt-get install -y openssl
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

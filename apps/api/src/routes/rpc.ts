@@ -1,10 +1,18 @@
-import { getEnhancedPrisma } from "@web-app/db"
 import { ZenStackFastifyPlugin } from "@zenstackhq/server/fastify"
 import type { FastifyPluginCallback } from "fastify"
 
+import { getEnhancedPrisma } from "@web-app/db"
+
 export const rpc: FastifyPluginCallback = function (app) {
+  app.addHook(
+    "onRequest",
+    app.auth([app.validateSession, app.tokenBucketConsume(1)]),
+  )
+
   app.register(ZenStackFastifyPlugin, {
     prefix: "",
-    getPrisma: (req, rep) => getEnhancedPrisma(),
+    getPrisma: function (req, rep) {
+      return getEnhancedPrisma({ user: req.user })
+    },
   })
 }

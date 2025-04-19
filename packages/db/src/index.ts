@@ -1,2 +1,2 @@
-export * from "./enhancedClient"
+export * from "./enhanced-client"
 export * from "./generated/client"

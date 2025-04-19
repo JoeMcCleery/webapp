@@ -6,7 +6,6 @@
     "@zenstackhq/runtime": "^2.13.1"
   },
   "devDependencies": {
-    "@web-app/prettier-config": "workspace:*",
     "@web-app/ts-config": "workspace:*",
     "prisma": "^6.5.0",
     "typescript": "^5.8.3",
@@ -17,6 +16,7 @@
     "src"
   ],
   "main": "src/index.ts",
+  "packageManager": "pnpm@10.8.1",
   "prisma": {
     "schema": "./src/prisma/schema.prisma"
   },

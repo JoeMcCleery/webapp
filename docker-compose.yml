@@ -91,9 +91,9 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
-    # volumes:
-    #   - ./apps/api:/usr/app/
-    #   - /usr/app/node_modules
+    volumes:
+      - ./apps/api:/usr/app/
+      - /usr/app/node_modules
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -107,6 +107,9 @@ services:
     container_name: ${PROJECT_PREFIX}_cms
     environment:
       DOMAIN_APP: ${DOMAIN_APP}
+    volumes:
+      - ./apps/cms:/usr/app/
+      - /usr/app/node_modules
     restart: unless-stopped
     labels:
       - traefik.enable=true

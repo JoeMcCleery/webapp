@@ -10,9 +10,9 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@web-app/ts-config": "workspace:*",
-    "@web-app/prettier-config": "workspace:*"
+    "@web-app/ts-config": "workspace:*"
   },
+  "packageManager": "pnpm@10.8.1",
   "private": true,
   "scripts": {
     "build": "nuxt build",
