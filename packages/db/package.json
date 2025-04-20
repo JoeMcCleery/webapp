@@ -22,7 +22,6 @@
   },
   "private": true,
   "scripts": {
-    "build": "pnpm db:generate",
     "db:deploy": "prisma migrate deploy",
     "db:generate": "zenstack generate --output src/generated/zenstack",
     "db:migrate": "prisma migrate dev",

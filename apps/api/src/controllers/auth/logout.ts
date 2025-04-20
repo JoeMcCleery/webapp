@@ -5,7 +5,7 @@ import { invalidateAllSessions, invalidateSession } from "@web-app/auth"
 export const logout: FastifyPluginCallback = async function (app) {
   app.addHook("onRequest", app.auth([app.validateSession]))
 
-  app.post("/", async function (req, rep) {
+  app.post("", async function (req, rep) {
     // Invalidate session
     await invalidateSession(req.session!.id)
   })
@@ -14,7 +14,7 @@ export const logout: FastifyPluginCallback = async function (app) {
 export const logoutAll: FastifyPluginCallback = function (app) {
   app.addHook("onRequest", app.auth([app.validateSession]))
 
-  app.post("/", async function (req, rep) {
+  app.post("", async function (req, rep) {
     // Invalidate all sessions
     await invalidateAllSessions(req.user!.id)
   })

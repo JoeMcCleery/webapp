@@ -1,8 +1,8 @@
 import fastifyAuth from "@fastify/auth"
+import cors from "@fastify/cors"
 import Fastify from "fastify"
 
-import { authMiddleware } from "./middlewares/auth"
-import { throttlerMiddleware } from "./middlewares/throttler"
+import { middleware } from "./middleware"
 import { routes } from "./routes"
 
 const init = async function () {
@@ -11,12 +11,12 @@ const init = async function () {
     logger: true,
   })
 
-  // Register middlewares
-  app.register(authMiddleware)
-  app.register(throttlerMiddleware)
-
-  // Register auth plugin
+  // Register plugins
+  app.register(cors)
   app.register(fastifyAuth, { defaultRelation: "and" })
+
+  // Register middleware
+  app.register(middleware)
 
   // Await plugins to finish loading
   await app.after()

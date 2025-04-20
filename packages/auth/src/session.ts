@@ -4,7 +4,7 @@ import {
   encodeHexLowerCase,
 } from "@oslojs/encoding"
 
-import { getEnhancedPrisma } from "@web-app/db"
+import { prisma } from "@web-app/db"
 
 const sessionDuration = 1000 * 60 * 60 * 24 * 30 // 30 days
 const sessionRefreshThreshold = 1000 * 60 * 60 * 24 * 15 // 15 days
@@ -21,7 +21,6 @@ function generateSessionId(token: string) {
 }
 
 export async function createSession(token: string, userId: string) {
-  const prisma = getEnhancedPrisma()
   // Create a new session
   const sessionId = generateSessionId(token)
   const session = await prisma.session.create({
@@ -35,7 +34,6 @@ export async function createSession(token: string, userId: string) {
 }
 
 export async function validateSessionToken(token: string) {
-  const prisma = getEnhancedPrisma()
   // Check if session exists
   const sessionId = generateSessionId(token)
   const result = await prisma.session.findUnique({
@@ -72,13 +70,11 @@ export async function validateSessionToken(token: string) {
 }
 
 export async function invalidateSession(sessionId: string) {
-  const prisma = getEnhancedPrisma()
   // Invalidate session by deleting it from the database
   await prisma.session.delete({ where: { id: sessionId } })
 }
 
 export async function invalidateAllSessions(userId: string) {
-  const prisma = getEnhancedPrisma()
   // Invalidate all sessions for a user by deleting them from the database
   await prisma.session.deleteMany({
     where: {

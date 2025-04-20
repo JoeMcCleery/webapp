@@ -1,6 +1,13 @@
 packages:
   - apps/*
   - packages/*
-syncInjectedDepsAfterScripts:
-  - build
-injectWorkspacePackages: true
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+  - sharp
+  - vue-demi
+  - zenstack
