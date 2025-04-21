@@ -6,7 +6,7 @@
     "@oslojs/encoding": "^1.1.0"
   },
   "devDependencies": {
-    "@web-app/db": "workspace:*",
+    "@web-app/orm": "workspace:*",
     "@web-app/ts-config": "workspace:*",
     "typescript": "^5.8.3"
   },

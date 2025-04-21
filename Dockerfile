@@ -12,9 +12,18 @@ COPY --parents ./apps/*/package.json .
 COPY --parents ./packages/*/package.json .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm run --filter=@web-app/db db:generate
+RUN pnpm run --filter=@web-app/orm db:generate
+# Deploy packages
+RUN pnpm deploy --filter=@web-app/orm --legacy /packages/orm
+# Deploy apps
 RUN pnpm deploy --filter=@web-app/api --legacy /apps/api
 RUN pnpm deploy --filter=@web-app/cms --legacy /apps/cms
+
+FROM base AS orm
+WORKDIR /usr/package
+COPY --from=build /packages/orm .
+EXPOSE 3000
+CMD [ "pnpm", "db:studio" ]
 
 FROM base AS api
 WORKDIR /usr/app

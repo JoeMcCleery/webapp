@@ -3,9 +3,11 @@ import { EnhancementContext, EnhancementOptions } from "@zenstackhq/runtime"
 import { PrismaClient, User } from "./generated/client"
 import { enhance } from "./generated/zenstack/enhance"
 
-export const prisma = new PrismaClient()
+export const dangerousPrisma = new PrismaClient()
 
 export const getEnhancedPrisma = (
-  context?: EnhancementContext<User>,
+  context: EnhancementContext<User>,
   options?: EnhancementOptions,
-) => enhance(prisma, context, options)
+) => enhance(dangerousPrisma, context, options)
+
+export const defaultPrisma = enhance(dangerousPrisma)

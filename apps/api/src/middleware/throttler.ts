@@ -20,6 +20,7 @@ export const throttlerMiddleware = fp(function (app) {
         rep
           .status(429)
           .send({ error: "Too many requests: Throttler limit exceded" })
+        // Request failed
         return done(new Error())
       }
       // Continue with request

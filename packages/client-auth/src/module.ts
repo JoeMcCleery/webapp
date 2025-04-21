@@ -17,7 +17,7 @@ export interface ModuleOptions {
   cookieName: string
   globalMiddleware: boolean
   redirectRoute: string
-  ignoreRoutes: string[]
+  ignoredRoutes: string[]
   api: {
     serverUrl: string
     clientUrl: string
@@ -27,6 +27,7 @@ export interface ModuleOptions {
       logoutAll: string
       fetchUser: string
       signup: string
+      reset: string
     }
   }
 }
@@ -40,7 +41,7 @@ export default defineNuxtModule<ModuleOptions>({
     cookieName: "session-token",
     globalMiddleware: true,
     redirectRoute: "/login",
-    ignoreRoutes: ["/signup"],
+    ignoredRoutes: ["/signup", "/forgot-password", "/reset-password"],
     api: {
       serverUrl: "http://api:3000",
       clientUrl: "https://api.localhost",
@@ -50,6 +51,7 @@ export default defineNuxtModule<ModuleOptions>({
         logoutAll: "/auth/logout-all",
         fetchUser: "/auth/user",
         signup: "/auth/signup",
+        reset: "/auth/reset",
       },
     },
   },

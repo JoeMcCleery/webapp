@@ -2,7 +2,7 @@ import { useFetch, useState } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed } from "vue"
 
-import type { User } from "@web-app/db"
+import type { User } from "@web-app/orm"
 
 import useAuthOptions from "../composables/useAuthOptions"
 
@@ -22,7 +22,10 @@ export const useAuthStore = defineStore("auth", () => {
   const options = useAuthOptions()
 
   // Define the state for the authenticated user
-  const authUser = useState<User | null>("auth-user", () => null)
+  const authUser = useState<User | null | undefined>(
+    "auth-user",
+    () => undefined,
+  )
   const user = computed(() => authUser.value)
 
   // Login using email and password
@@ -31,9 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
       method: "POST",
       body: data,
     })
-    if (result.data.value) {
-      authUser.value = result.data.value
-    }
+    // TODO automatic login on success
   }
 
   // Invalidate the current session
@@ -52,14 +53,15 @@ export const useAuthStore = defineStore("auth", () => {
     })
   }
 
-  // Using the current session, fetch the logged in user from the server
+  // Using the current session, try fetch the logged in user from the server
   const fetchUser = async () => {
-    const result = await useFetch<User>(apiUrl(options.api.routes.fetchUser), {
-      method: "POST",
-    })
-    if (result.data.value) {
-      authUser.value = result.data.value
-    }
+    const result = await useFetch<User | null>(
+      apiUrl(options.api.routes.fetchUser),
+      {
+        method: "POST",
+      },
+    )
+    authUser.value = result.data.value
   }
 
   // Create a new user account
@@ -72,12 +74,42 @@ export const useAuthStore = defineStore("auth", () => {
       method: "POST",
       body: data,
     })
-    if (result.data.value) {
-      authUser.value = result.data.value
-    }
+    // TODO automatic login on success
   }
 
-  return { user, login, logout, logoutAll, fetchUser, signup }
+  const forgotPassword = async (data: { email: string }) => {
+    const result = await useFetch<User>(apiUrl(options.api.routes.reset), {
+      method: "POST",
+      body: data,
+    })
+  }
+
+  const resetUserPassword = async (data: {
+    newPassword: string
+    confirmPassword: string
+    token: string
+  }) => {
+    const { token, ...body } = data
+    const result = await useFetch<User>(
+      apiUrl(`${options.api.routes.reset}/${token}`),
+      {
+        method: "POST",
+        body,
+      },
+    )
+    // TODO automatic login on success
+  }
+
+  return {
+    user,
+    login,
+    logout,
+    logoutAll,
+    fetchUser,
+    signup,
+    forgotPassword,
+    resetUserPassword,
+  }
 })
 
 export default useAuthStore

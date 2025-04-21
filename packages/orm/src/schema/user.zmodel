@@ -1,0 +1,37 @@
+import 'abstract/base'
+
+model User extends Base {
+  name          String         @length(min: 1)
+  email         String         @email @unique
+  password      String         @password @omit @length(min: 8, max: 32)
+
+  sessions      Session[]
+  passwordReset PasswordReset?
+
+  // anyone can create users
+  @@allow('create', true)
+  // full access by self
+  @@allow('all', auth() == this)
+}
+
+model Session extends Base {
+  tokenHash String   @unique
+  expiresAt DateTime
+  userId    String   @db.Uuid @default(auth().id)
+
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  // users manage own sessions
+  @@allow('all', auth() == user)
+}
+
+model PasswordReset extends Base {
+  tokenHash String   @unique
+  expiresAt DateTime
+  userId    String   @db.Uuid @unique @default(auth().id)
+
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  // users manage own password resets
+  @@allow('all', auth() == user)
+}

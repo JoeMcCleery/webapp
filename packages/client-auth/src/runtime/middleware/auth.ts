@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // Skip middleware if navigating to the redirect route or ignored route
   if (
     to.path === options.redirectRoute ||
-    options.ignoreRoutes.includes(to.path)
+    options.ignoredRoutes.includes(to.path)
   ) {
     return
   }

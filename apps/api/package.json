@@ -5,8 +5,9 @@
     "@fastify/auth": "^5.0.2",
     "@fastify/cors": "^11.0.1",
     "@web-app/auth": "workspace:*",
-    "@web-app/db": "workspace:*",
+    "@web-app/orm": "workspace:*",
     "@zenstackhq/server": "^2.13.1",
+    "bcryptjs": "^3.0.2",
     "fastify": "^5.2.2",
     "fastify-plugin": "^5.0.1"
   },

@@ -9,7 +9,7 @@
     "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^3.16.2",
     "@pinia/nuxt": "^0.11.0",
-    "@web-app/db": "workspace:*",
+    "@web-app/orm": "workspace:*",
     "@web-app/ts-config": "workspace:*",
     "nuxt": "^3.16.2",
     "pinia": "^3.0.2",

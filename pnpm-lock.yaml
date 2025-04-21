@@ -32,12 +32,15 @@ importers:
       '@web-app/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@web-app/db':
+      '@web-app/orm':
         specifier: workspace:*
-        version: link:../../packages/db
+        version: link:../../packages/orm
       '@zenstackhq/server':
         specifier: ^2.13.1
         version: 2.14.0(@prisma/client@6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3))
+      bcryptjs:
+        specifier: ^3.0.2
+        version: 3.0.2
       fastify:
         specifier: ^5.2.2
         version: 5.3.2
@@ -104,9 +107,9 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
     devDependencies:
-      '@web-app/db':
+      '@web-app/orm':
         specifier: workspace:*
-        version: link:../db
+        version: link:../orm
       '@web-app/ts-config':
         specifier: workspace:*
         version: link:../ts-config
@@ -132,9 +135,9 @@ importers:
       '@pinia/nuxt':
         specifier: ^0.11.0
         version: 0.11.0(magicast@0.3.5)(pinia@3.0.2(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3)))
-      '@web-app/db':
+      '@web-app/orm':
         specifier: workspace:*
-        version: link:../db
+        version: link:../orm
       '@web-app/ts-config':
         specifier: workspace:*
         version: link:../ts-config
@@ -151,7 +154,7 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.8.3)
 
-  packages/db:
+  packages/orm:
     dependencies:
       '@prisma/client':
         specifier: ^6.5.0
@@ -1951,6 +1954,10 @@ packages:
 
   bcryptjs@2.4.3:
     resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
+
+  bcryptjs@3.0.2:
+    resolution: {integrity: sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==}
+    hasBin: true
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -7978,6 +7985,8 @@ snapshots:
   base64-js@1.5.1: {}
 
   bcryptjs@2.4.3: {}
+
+  bcryptjs@3.0.2: {}
 
   binary-extensions@2.3.0: {}
 

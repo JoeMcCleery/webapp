@@ -1,6 +1,14 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import { login, logout, logoutAll, signup, user } from "../controllers/auth"
+import {
+  forgotPassword,
+  login,
+  logout,
+  logoutAll,
+  resetPassword,
+  signup,
+  user,
+} from "../controllers/auth"
 
 export const auth: FastifyPluginCallback = function (app) {
   app.register(login, { prefix: "/login" })
@@ -8,4 +16,6 @@ export const auth: FastifyPluginCallback = function (app) {
   app.register(logoutAll, { prefix: "/logout-all" })
   app.register(user, { prefix: "/user" })
   app.register(signup, { prefix: "/signup" })
+  app.register(forgotPassword, { prefix: "/reset" })
+  app.register(resetPassword, { prefix: "/reset" })
 }
