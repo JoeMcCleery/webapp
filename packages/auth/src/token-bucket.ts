@@ -1,34 +1,45 @@
-interface Bucket {
+import { createInMemoryStorage, IStorage } from "./storage"
+
+interface TokenBucket {
   count: number
   refilledAt: number
 }
 
-class TokenBucketRateLimit<_Key> {
-  public max: number
-  public refillIntervalSeconds: number
+interface TokenBucketConfig<StorageKey> {
+  storage?: IStorage<StorageKey, TokenBucket>
+  max?: number
+  refillIntervalSeconds?: number
+}
 
-  constructor(max: number, refillIntervalSeconds: number) {
-    this.max = max
-    this.refillIntervalSeconds = refillIntervalSeconds
+class TokenBucketRateLimit<StorageKey> {
+  private storage: IStorage<StorageKey, TokenBucket>
+  private max: number
+  private refillIntervalSeconds: number
+
+  constructor(config: TokenBucketConfig<StorageKey> = {}) {
+    this.storage =
+      config.storage ?? createInMemoryStorage<StorageKey, TokenBucket>()
+    this.max = config.max ?? 10
+    this.refillIntervalSeconds = config.refillIntervalSeconds ?? 2
   }
 
-  private storage = new Map<_Key, Bucket>()
-
-  public consume(key: _Key, cost: number): boolean {
-    let bucket = this.storage.get(key) ?? null
+  public consume(key: StorageKey, cost: number): boolean {
+    // Try find the bucket for the provided key
+    let bucket = this.storage.get(key)
     const now = Date.now()
-    // If the key is not in the storage, create a new bucket
-    if (bucket === null) {
+    // If bucket wasn't found, create a new one
+    if (!bucket) {
       bucket = {
         count: this.max - cost,
         refilledAt: now,
       }
       this.storage.set(key, bucket)
+      // Success
       return true
     }
-    // If the key is in the storage, refill tokens based on the time passed
+    // Refill the bucket based on the time passed
     const refill = Math.floor(
-      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000)
+      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000),
     )
     bucket.count = Math.min(bucket.count + refill, this.max)
     bucket.refilledAt =
@@ -37,14 +48,15 @@ class TokenBucketRateLimit<_Key> {
     if (bucket.count < cost) {
       return false
     }
-    // If there are enough tokens, consume them and update the bucket
+    // Consume tokens
     bucket.count -= cost
     this.storage.set(key, bucket)
+    // Success
     return true
   }
 }
 
-const tokenBucket = new TokenBucketRateLimit<string>(10, 2)
+const tokenBucket = new TokenBucketRateLimit<string>()
 
 export const tokenBucketConsume = (key: string, cost: number) => {
   return tokenBucket.consume(key, cost)

@@ -1,48 +1,61 @@
+import { createInMemoryStorage, IStorage } from "./storage"
+
 interface ThrottlingCounter {
   index: number
   updatedAt: number
 }
 
-class Throttler<_Key> {
-  public timeoutSeconds: number[]
+interface ThrottlerConfig<StorageKey> {
+  storage?: IStorage<StorageKey, ThrottlingCounter>
+  timeoutSeconds?: number[]
+}
 
-  private storage = new Map<_Key, ThrottlingCounter>()
+class Throttler<StorageKey> {
+  private storage: IStorage<StorageKey, ThrottlingCounter>
+  private timeoutSeconds: number[]
 
-  constructor(timeoutSeconds: number[]) {
-    this.timeoutSeconds = timeoutSeconds
+  constructor(config: ThrottlerConfig<StorageKey> = {}) {
+    this.storage =
+      config.storage ?? createInMemoryStorage<StorageKey, ThrottlingCounter>()
+    this.timeoutSeconds = config.timeoutSeconds ?? [
+      1, 2, 4, 8, 16, 30, 60, 180, 300, 600,
+    ]
   }
 
-  public consume(key: _Key): boolean {
-    let counter = this.storage.get(key) ?? null
+  public consume(key: StorageKey): boolean {
+    // Try find the counter for the provided key
+    let counter = this.storage.get(key)
     const now = Date.now()
-    // If the key is not in the storage, create a new counter
-    if (counter === null) {
+    // If no counter wasn't found, create a new one
+    if (!counter) {
       counter = {
         index: 0,
         updatedAt: now,
       }
       this.storage.set(key, counter)
+      // Success
       return true
     }
-    // If the key is in the storage, check if it is allowed to consume
+    // Check if the counter can consume
     const allowed =
       now - counter.updatedAt >= this.timeoutSeconds[counter.index] * 1000
     if (!allowed) {
       return false
     }
-    // If allowed, update the counter (counter is reset seperately once all auth checks on server are successful)
+    // Set new updated at time and increase the index (index is reset elsewhere, normally once a request is successful)
     counter.updatedAt = now
     counter.index = Math.min(counter.index + 1, this.timeoutSeconds.length - 1)
     this.storage.set(key, counter)
+    // Success
     return true
   }
 
-  public reset(key: _Key): void {
+  public reset(key: StorageKey): void {
     this.storage.delete(key)
   }
 }
 
-const throttler = new Throttler<string>([1, 2, 4, 8, 16, 30, 60, 180, 300])
+const throttler = new Throttler<string>()
 
 export const throttlerConsume = (key: string) => {
   return throttler.consume(key)
