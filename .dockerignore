@@ -10,3 +10,6 @@
 localstack
 **/*.env
 Dockerfile
+docker-compose.yml
+.syncpackrc.js
+prettier.config.js

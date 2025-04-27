@@ -1,4 +1,4 @@
-import { dangerousPrisma, getEnhancedPrisma, User } from "@web-app/orm"
+import { dangerousPrisma, getEnhancedPrisma, User } from "@webapp/orm"
 
 import { generateHashFromToken } from "./token-generator"
 

@@ -5,7 +5,8 @@ services:
     command:
       - --api.insecure=false
       - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
+      - --providers.docker.defaultRule=Host(`{{ index .Labels "subdomain" }}.${DOMAIN_APP}`)
+      - --providers.docker.constraints=LabelRegex(`subdomain`, `\S`)
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
@@ -21,12 +22,12 @@ services:
       - letsencrypt:/letsencrypt
     restart: unless-stopped
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.traefik.service=api@internal
+      - subdomain=traefik
       - traefik.http.routers.traefik.tls=true
       # - traefik.http.routers.traefik.tls.certresolver=le
-      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_APP}`)
+      - traefik.http.routers.traefik.service=api@internal
 
+  # Local dev only
   db:
     image: postgres
     container_name: ${PROJECT_PREFIX}_db
@@ -38,6 +39,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # Local dev only
   localstack:
     image: gresau/localstack-persist
     container_name: ${PROJECT_PREFIX}_localstack
@@ -50,11 +52,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     labels:
-      - traefik.enable=true
+      - subdomain=localstack
       - traefik.http.routers.localstack.tls=true
       # - traefik.http.routers.localstack.tls.certresolver=le
-      - traefik.http.routers.localstack.rule=Host(`localstack.${DOMAIN_APP}`)
 
+  # Local dev only
   email:
     image: rnwood/smtp4dev
     container_name: ${PROJECT_PREFIX}_email
@@ -71,12 +73,12 @@ services:
       - email_data:/smtp4dev
     restart: unless-stopped
     labels:
-      - traefik.enable=true
-      - traefik.http.services.email.loadbalancer.server.port=80
+      - subdomain=email
       - traefik.http.routers.email.tls=true
       # - traefik.http.routers.email.tls.certresolver=le
-      - traefik.http.routers.email.rule=Host(`email.${DOMAIN_APP}`)
+      - traefik.http.services.email-webapp.loadbalancer.server.port=80
 
+  # Local dev only
   orm:
     build:
       target: orm
@@ -92,10 +94,9 @@ services:
       - /usr/package/node_modules/
     restart: unless-stopped
     labels:
-      - traefik.enable=true
+      - subdomain=orm
       - traefik.http.routers.orm.tls=true
       # - traefik.http.routers.orm.tls.certresolver=le
-      - traefik.http.routers.orm.rule=Host(`orm.${DOMAIN_APP}`)
 
   api:
     build:
@@ -116,15 +117,16 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
+      COOKIE_SECRET: ${COOKIE_SECRET}
     volumes:
       - ./apps/api/src:/usr/app/src
       - /usr/app/node_modules/
     restart: unless-stopped
+    hostname: api.${DOMAIN_APP}
     labels:
-      - traefik.enable=true
+      - subdomain=api
       - traefik.http.routers.api.tls=true
       # - traefik.http.routers.api.tls.certresolver=le
-      - traefik.http.routers.api.rule=Host(`api.${DOMAIN_APP}`)
 
   cms:
     build:
@@ -136,13 +138,14 @@ services:
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
     volumes:
       - ./apps/cms/src:/usr/app/src
+      - ./apps/cms/nuxt.config.ts:/usr/app/nuxt.config.ts
       - /usr/app/node_modules/
     restart: unless-stopped
+    hostname: cms.${DOMAIN_APP}
     labels:
-      - traefik.enable=true
+      - subdomain=cms
       - traefik.http.routers.cms.tls=true
       # - traefik.http.routers.cms.tls.certresolver=le
-      - traefik.http.routers.cms.rule=Host(`cms.${DOMAIN_APP}`)
 
 volumes:
   letsencrypt:

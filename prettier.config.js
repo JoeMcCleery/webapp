@@ -8,7 +8,7 @@ const config = {
     "prettier-plugin-tailwindcss", // Must come last
   ],
   semi: false,
-  importOrder: ["^@web-app/(.*)$", "^[~/]", "^[./]"],
+  importOrder: ["^@webapp/(.*)$", "^[~/]", "^[./]"],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderCaseInsensitive: true,

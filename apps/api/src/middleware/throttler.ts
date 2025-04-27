@@ -1,10 +1,10 @@
-import { FastifyAuthFunction } from "@fastify/auth"
+import type { FastifyAuthFunction } from "@fastify/auth"
 import fp from "fastify-plugin"
 
-import { throttlerConsume, throttlerReset } from "@web-app/auth"
+import { throttlerConsume, throttlerReset } from "@webapp/auth"
 
 declare module "fastify" {
-  export interface FastifyInstance {
+  interface FastifyInstance {
     throttlerConsume: FastifyAuthFunction
     throttlerReset: FastifyAuthFunction
   }
@@ -32,7 +32,6 @@ export const throttlerMiddleware = fp(function (app) {
     "throttlerReset",
     function (req, rep, done) {
       // Reset throttle limits for request ip if response is successful
-      console.log("statusCode", rep.statusCode)
       if (rep.statusCode === 200 || rep.statusCode === 201) {
         console.log(`Throttler limit reset for ip: ${req.ip}`)
         throttlerReset(req.ip)

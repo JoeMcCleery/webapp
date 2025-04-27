@@ -1,10 +1,8 @@
 import { useRuntimeConfig } from "nuxt/app"
-
-import type { ModuleOptions } from "../../module"
+import { readonly } from "vue"
 
 export default function useAuthOptions() {
-  // Get module options from runtime config
+  // Get readonly module options from runtime config
   const runtimeConfig = useRuntimeConfig()
-  const options: Readonly<ModuleOptions> = runtimeConfig.public.auth
-  return options
+  return readonly(runtimeConfig.public.auth)
 }

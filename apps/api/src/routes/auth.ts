@@ -16,6 +16,6 @@ export const auth: FastifyPluginCallback = function (app) {
   app.register(logoutAll, { prefix: "/logout-all" })
   app.register(user, { prefix: "/user" })
   app.register(signup, { prefix: "/signup" })
-  app.register(forgotPassword, { prefix: "/reset" })
-  app.register(resetPassword, { prefix: "/reset" })
+  app.register(forgotPassword, { prefix: "/forgot-password" })
+  app.register(resetPassword, { prefix: "/reset-password" })
 }

@@ -1,10 +1,10 @@
 {
-  "name": "@web-app/cms",
+  "name": "@webapp/cms",
   "dependencies": {
     "@nuxt/fonts": "^0.11.1",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.0.2",
-    "@web-app/client-auth": "workspace:*",
+    "@webapp/client-auth": "workspace:*",
     "nuxt": "^3.16.2",
     "tailwindcss": "^4.1.4",
     "vue": "^3.5.13",
@@ -12,11 +12,11 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@web-app/ts-config": "workspace:*",
+    "@webapp/ts-config": "workspace:*",
     "typescript": "^5.8.3",
     "vue-tsc": "^2.2.8"
   },
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.9.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",

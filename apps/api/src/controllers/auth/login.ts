@@ -1,12 +1,13 @@
 import { compare } from "bcryptjs"
-import { FastifyPluginCallback } from "fastify"
+import type { FastifyPluginCallback } from "fastify"
 
 import {
   createSession,
   generateUniqueToken,
+  invalidateSession,
   tokenBucketConsume,
-} from "@web-app/auth"
-import { dangerousPrisma } from "@web-app/orm"
+} from "@webapp/auth"
+import { dangerousPrisma } from "@webapp/orm"
 
 export const login: FastifyPluginCallback = function (app) {
   app.post<{ Body: { email: string; password: string } }>(
@@ -38,12 +39,15 @@ export const login: FastifyPluginCallback = function (app) {
           .status(429)
           .send({ error: "Too many requests: Not enough tokens" })
       }
+      // Invalidate existing session
+      if (req.user && req.session) {
+        await invalidateSession(req.user, req.session.id)
+      }
       // Create new session
       const token = generateUniqueToken()
       const session = await createSession(token, user)
       // Set session cookie
-      // TODO
-
+      rep.setSessionCookie(token, session.expiresAt)
       // Success
       return rep.status(200).send()
     },

@@ -18,23 +18,23 @@ export interface ModuleOptions {
   globalMiddleware: boolean
   redirectRoute: string
   ignoredRoutes: string[]
-  api: {
-    serverUrl: string
-    clientUrl: string
-    routes: {
-      login: string
-      logout: string
-      logoutAll: string
-      fetchUser: string
-      signup: string
-      reset: string
-    }
+  apiUrl: string
+  serverApiUrl: string
+  authenticationRequired: boolean
+  routes: {
+    login: string
+    logout: string
+    logoutAll: string
+    fetchUser: string
+    signup: string
+    forgotPassword: string
+    resetPassword: string
   }
 }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "@web-app/client-auth",
+    name: "@webapp/client-auth",
     configKey: "auth",
   },
   defaults: {
@@ -42,27 +42,30 @@ export default defineNuxtModule<ModuleOptions>({
     globalMiddleware: true,
     redirectRoute: "/login",
     ignoredRoutes: ["/signup", "/forgot-password", "/reset-password"],
-    api: {
-      serverUrl: "http://api:3000",
-      clientUrl: "https://api.localhost",
-      routes: {
-        login: "/auth/login",
-        logout: "/auth/logout",
-        logoutAll: "/auth/logout-all",
-        fetchUser: "/auth/user",
-        signup: "/auth/signup",
-        reset: "/auth/reset",
-      },
+    apiUrl: "",
+    serverApiUrl: "",
+    authenticationRequired: true,
+    routes: {
+      login: "/auth/login",
+      logout: "/auth/logout",
+      logoutAll: "/auth/logout-all",
+      fetchUser: "/auth/user",
+      signup: "/auth/signup",
+      forgotPassword: "/auth/forgot-password",
+      resetPassword: "/auth/reset-password",
     },
   },
   async setup(inlineOptions, nuxt) {
-    const resolver = createResolver(import.meta.url)
-
-    // Expose options to the runtime config
+    // Expose options to nuxt runtime config
     const moduleOptions = defu(nuxt.options.runtimeConfig.public.auth || {}, {
       ...inlineOptions,
     })
     nuxt.options.runtimeConfig.public.auth = moduleOptions
+
+    // Install pinia module
+    await installModule("@pinia/nuxt")
+
+    const resolver = createResolver(import.meta.url)
 
     // Auto import module composables
     addImportsDir(resolver.resolve("./runtime/composables"))
@@ -79,8 +82,5 @@ export default defineNuxtModule<ModuleOptions>({
       },
       { prepend: true },
     )
-
-    // Install pinia module
-    await installModule("@pinia/nuxt")
   },
 })

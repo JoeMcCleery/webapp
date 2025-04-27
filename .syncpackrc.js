@@ -17,12 +17,12 @@ const config = {
     {
       label: "Use root package manager version",
       dependencyTypes: ["packageManager"],
-      snapTo: ["web-app"],
+      snapTo: ["webapp"],
     },
     {
       label: "Use root engine versions",
       dependencyTypes: ["engines"],
-      snapTo: ["web-app"],
+      snapTo: ["webapp"],
     },
   ],
   semverGroups: [
@@ -31,6 +31,6 @@ const config = {
       range: "^",
     },
   ],
-};
+}
 
-module.exports = config;
+module.exports = config

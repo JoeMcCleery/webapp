@@ -1,5 +1,5 @@
 {
-  "name": "@web-app/ts-config",
+  "name": "@webapp/ts-config",
   "version": "1.0.0",
   "files": [
     "tsconfig.json"

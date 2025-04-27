@@ -1,24 +1,19 @@
-import { FastifyPluginCallback } from "fastify"
+import type { FastifyPluginCallback } from "fastify"
 
-import { getEnhancedPrisma } from "@web-app/orm"
+import { getEnhancedPrisma } from "@webapp/orm"
 
 export const user: FastifyPluginCallback = function (app) {
-  app.addHook(
-    "onRequest",
-    app.auth([app.validateSession, app.tokenBucketConsume(1)]),
-  )
-
-  app.post("", function (req, rep) {
+  app.post("", async function (req, rep) {
     // Check user exists
     if (req.user) {
       // Get safe user
       const prisma = getEnhancedPrisma({ user: req.user })
-      const user = prisma.user.findUnique({ where: { id: req.user.id } })
+      const user = await prisma.user.findUnique({ where: { id: req.user.id } })
       // Send user object back to client
-      console.log("Send authenticated user obect to client")
-      return rep.status(200).send({ user })
+      console.log("Send authenticated user object to client")
+      return rep.status(200).send(user)
     }
     console.log("No authenticated user, sending null user to client")
-    return rep.status(200).send({ user: null })
+    return rep.status(200).send(null)
   })
 }

@@ -1,12 +1,12 @@
-import { FastifyAuthFunction } from "@fastify/auth"
+import type { FastifyAuthFunction } from "@fastify/auth"
 import fp from "fastify-plugin"
 
-import { tokenBucketConsume } from "@web-app/auth"
+import { tokenBucketConsume } from "@webapp/auth"
 
 type TokenBucketConsumeFunction = (cost: number) => FastifyAuthFunction
 
 declare module "fastify" {
-  export interface FastifyInstance {
+  interface FastifyInstance {
     tokenBucketConsume: TokenBucketConsumeFunction
   }
 }

@@ -1,18 +1,19 @@
 {
-  "name": "@web-app/api",
+  "name": "@webapp/api",
   "version": "1.0.0",
   "dependencies": {
     "@fastify/auth": "^5.0.2",
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.0.1",
-    "@web-app/auth": "workspace:*",
-    "@web-app/orm": "workspace:*",
+    "@webapp/auth": "workspace:*",
+    "@webapp/orm": "workspace:*",
     "@zenstackhq/server": "^2.13.1",
     "bcryptjs": "^3.0.2",
     "fastify": "^5.2.2",
     "fastify-plugin": "^5.0.1"
   },
   "devDependencies": {
-    "@web-app/ts-config": "workspace:*",
+    "@webapp/ts-config": "workspace:*",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   },
@@ -20,7 +21,7 @@
     "src"
   ],
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.9.0",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts"

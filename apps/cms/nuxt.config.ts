@@ -1,9 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
+    },
+  },
   workspaceDir: "../../",
   srcDir: "src/",
-  modules: ["@nuxt/ui", "@nuxt/image", "@web-app/client-auth"],
+  modules: ["@nuxt/ui", "@nuxt/image", "@webapp/client-auth"],
   css: ["~/assets/css/main.css"],
+  auth: {
+    apiUrl: `https://api.${process.env.DOMAIN_APP}`,
+    serverApiUrl: `http://api.${process.env.DOMAIN_APP}:3000`,
+  },
 })

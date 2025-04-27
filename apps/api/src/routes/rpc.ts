@@ -1,7 +1,7 @@
 import { ZenStackFastifyPlugin } from "@zenstackhq/server/fastify"
 import type { FastifyPluginCallback } from "fastify"
 
-import { getEnhancedPrisma } from "@web-app/orm"
+import { getEnhancedPrisma } from "@webapp/orm"
 
 export const rpc: FastifyPluginCallback = function (app) {
   app.addHook(

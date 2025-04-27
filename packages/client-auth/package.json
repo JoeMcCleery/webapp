@@ -1,5 +1,5 @@
 {
-  "name": "@web-app/client-auth",
+  "name": "@webapp/client-auth",
   "version": "1.0.0",
   "dependencies": {
     "@nuxt/kit": "^3.16.2",
@@ -9,8 +9,8 @@
     "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^3.16.2",
     "@pinia/nuxt": "^0.11.0",
-    "@web-app/orm": "workspace:*",
-    "@web-app/ts-config": "workspace:*",
+    "@webapp/orm": "workspace:*",
+    "@webapp/ts-config": "workspace:*",
     "nuxt": "^3.16.2",
     "pinia": "^3.0.2",
     "typescript": "^5.8.3",
@@ -20,7 +20,7 @@
     "src"
   ],
   "main": "src/module.ts",
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.9.0",
   "peerDependencies": {
     "@pinia/nuxt": "^0.11.0",
     "nuxt": "^3.16.2",

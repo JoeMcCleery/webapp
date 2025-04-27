@@ -1,4 +1,5 @@
 import fastifyAuth from "@fastify/auth"
+import fastifyCookie from "@fastify/cookie"
 import cors from "@fastify/cors"
 import Fastify from "fastify"
 
@@ -12,7 +13,23 @@ const init = async function () {
   })
 
   // Register plugins
-  app.register(cors)
+  app.register(cors, {
+    origin: [
+      `https://api.${process.env.DOMAIN_APP}`,
+      `https://cms.${process.env.DOMAIN_APP}`,
+    ],
+    credentials: true,
+  })
+  app.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET,
+    parseOptions: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      domain: process.env.DOMAIN_APP,
+    },
+  })
   app.register(fastifyAuth, { defaultRelation: "and" })
 
   // Register middleware
@@ -28,13 +45,25 @@ const init = async function () {
   return app
 }
 
-// Start the server!
+// Init
 init().then((app) => {
+  // Start the server!
   app.listen({ host: "0.0.0.0", port: 3000 }, function (err, address) {
     if (err) {
       app.log.error(err)
       process.exit(1)
     }
     console.log(app.printRoutes())
+  })
+
+  // Gracefull shutdown
+  const signals = ["SIGTERM", "SIGINT"]
+  signals.forEach((signal) => {
+    process.on(signal, () => {
+      console.log("Server shutting down...")
+      app.close().then(() => {
+        process.exit(0)
+      })
+    })
   })
 })
