@@ -1,4 +1,7 @@
-import { navigateTo, refreshCookie, useCookie, useRequestFetch } from "nuxt/app"
+import defu from "defu"
+import { appendResponseHeader } from "h3"
+import type { NitroFetchOptions, NitroFetchRequest } from "nitropack"
+import { navigateTo, useRequestEvent, useRequestHeaders } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
@@ -8,12 +11,44 @@ import useAuthOptions from "../composables/useAuthOptions"
 
 type AuthUser = Omit<User, "password">
 
-const getBaseAPIUrl = () => {
+const fetchWithCookie = async <T>(
+  request: NitroFetchRequest,
+  opts: NitroFetchOptions<typeof request> = {},
+) => {
+  // Get module options
   const options = useAuthOptions()
-  if (import.meta.server) {
-    return options.serverApiUrl
+  // Get cookies from client
+  const headers = useRequestHeaders(["cookie"])
+  // Create fetch options object
+  const fetchOptions = defu(opts || {}, {
+    method: "POST",
+    headers,
+    credentials: "include",
+  } as NitroFetchOptions<typeof request>)
+  // Get current request event (only exists in server context)
+  const event = useRequestEvent()
+  // Fetch on server or client
+  if (event) {
+    // Send raw request to api
+    const res = await $fetch.raw<T>(request, {
+      ...fetchOptions,
+      baseURL: options.serverApiUrl,
+    })
+    // Get cookies from api response
+    const cookies = res.headers.getSetCookie()
+    // Attach cookies to incoming request
+    for (const cookie of cookies) {
+      appendResponseHeader(event, "set-cookie", cookie)
+    }
+    // Return the data of the request
+    return res._data
+  } else {
+    // Send request to api and return result
+    return await $fetch<T>(request, {
+      ...fetchOptions,
+      baseURL: options.apiUrl,
+    })
   }
-  return options.apiUrl
 }
 
 const useAuthUserStore = defineStore("auth-user", () => {
@@ -21,8 +56,8 @@ const useAuthUserStore = defineStore("auth-user", () => {
   const user = ref<Readonly<AuthUser> | null>(null)
 
   // Set authenticated user state
-  const setAuthUser = (value: Readonly<AuthUser> | null) => {
-    user.value = value
+  const setAuthUser = (value?: Readonly<AuthUser> | null) => {
+    user.value = value ?? null
   }
 
   return { user, setAuthUser }
@@ -35,42 +70,23 @@ export const useAuthStore = defineStore("auth", () => {
   // Get auth user store
   const authUserStore = useAuthUserStore()
 
-  // Get readonly session cookie
-  const sessionCookie = useCookie(options.cookieName, { readonly: true })
-
-  // Refresh the session cookie ref
-  const refreshSessionCookie = () => refreshCookie(options.cookieName)
-
   // Login using email and password
   const login = async (data: { email: string; password: string }) => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const requestFetch = useRequestFetch()
-    await requestFetch(options.routes.login, {
-      method: "POST",
-      baseURL: getBaseAPIUrl(),
-      body: data,
-      credentials: "include",
-    })
-    refreshSessionCookie()
+    await fetchWithCookie(options.routes.login, { body: data })
     // Fetch user
     await fetchUser()
   }
 
   // Invalidate the current session
   const invalidateSession = async () => {
-    authUserStore.setAuthUser(null)
-    // Invalidate session if there is a session cookie
-    if (sessionCookie.value) {
-      const requestFetch = useRequestFetch()
-      await requestFetch(options.routes.logout, {
-        method: "POST",
-        baseURL: getBaseAPIUrl(),
-        credentials: "include",
-      })
+    // Invalidate session if there is a user
+    if (authUserStore.user) {
+      await fetchWithCookie(options.routes.logout)
+      authUserStore.setAuthUser(null)
     }
-    refreshSessionCookie()
   }
 
   // Invalidate session and optionally redirect user
@@ -83,17 +99,11 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Invalidate all sessions for the user
   const invalidateAllSessions = async () => {
-    authUserStore.setAuthUser(null)
-    // Invalidate all sessions if there is a session cookie
-    if (sessionCookie.value) {
-      const requestFetch = useRequestFetch()
-      const result = await requestFetch(options.routes.logoutAll, {
-        method: "POST",
-        baseURL: getBaseAPIUrl(),
-        credentials: "include",
-      })
+    // Invalidate all sessions if there is a user
+    if (authUserStore.user) {
+      await fetchWithCookie(options.routes.logoutAll)
+      authUserStore.setAuthUser(null)
     }
-    refreshSessionCookie()
   }
 
   // Invalidate all sessions and optionally redirect user
@@ -106,16 +116,9 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Try fetch the logged in user from the server
   const fetchUser = async () => {
-    let result: AuthUser | null = null
-    // Only send the request if there is a session cookie
-    if (sessionCookie.value) {
-      const requestFetch = useRequestFetch()
-      result = await requestFetch<AuthUser | null>(options.routes.fetchUser, {
-        method: "POST",
-        baseURL: getBaseAPIUrl(),
-        credentials: "include",
-      })
-    }
+    const result = await fetchWithCookie<AuthUser | null>(
+      options.routes.fetchUser,
+    )
     authUserStore.setAuthUser(result)
     return result
   }
@@ -129,25 +132,14 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const requestFetch = useRequestFetch()
-    await requestFetch(options.routes.signup, {
-      method: "POST",
-      baseURL: getBaseAPIUrl(),
-      credentials: "include",
-      body: data,
-    })
-    refreshSessionCookie()
+    await fetchWithCookie(options.routes.signup, { body: data })
     // Fetch user
     await fetchUser()
   }
 
   const forgotPassword = async (data: { email: string }) => {
     // Send request
-    const requestFetch = useRequestFetch()
-    const result = await requestFetch(options.routes.forgotPassword, {
-      method: "POST",
-      baseURL: getBaseAPIUrl(),
-      credentials: "include",
+    const result = await fetchWithCookie(options.routes.forgotPassword, {
       body: data,
     })
     return result
@@ -161,22 +153,13 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const requestFetch = useRequestFetch()
-    await requestFetch(options.routes.resetPassword, {
-      method: "POST",
-      baseURL: getBaseAPIUrl(),
-      credentials: "include",
-      body: data,
-    })
-    refreshSessionCookie()
+    await fetchWithCookie(options.routes.resetPassword, { body: data })
     // Fetch user
     await fetchUser()
   }
 
   return {
     user: computed(() => authUserStore.user),
-    sessionCookie,
-    refreshSessionCookie,
     login,
     invalidateSession,
     logout,

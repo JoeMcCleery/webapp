@@ -56,7 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   async setup(inlineOptions, nuxt) {
-    // Expose options to nuxt runtime config
+    // Expose inline options to nuxt runtime config (values set in runtime config have priority)
     const moduleOptions = defu(nuxt.options.runtimeConfig.public.auth || {}, {
       ...inlineOptions,
     })
