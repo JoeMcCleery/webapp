@@ -21,7 +21,6 @@ const init = async function () {
     credentials: true,
   })
   app.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET,
     parseOptions: {
       httpOnly: true,
       sameSite: "lax",

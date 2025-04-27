@@ -13,7 +13,7 @@ declare module "fastify" {
   interface FastifyRequest {
     session?: Session
     user?: User
-    getSessionCookie(): string | null
+    getSessionCookie(): string | undefined
   }
 
   interface FastifyReply {
@@ -29,17 +29,13 @@ export const sessionMiddleware = fp(function (app) {
   app.decorateRequest("user")
 
   app.decorateRequest("getSessionCookie", function (this: FastifyRequest) {
-    const { value } = this.unsignCookie(this.cookies[cookieName] ?? "")
-    return value
+    return this.cookies[cookieName]
   })
 
   app.decorateReply(
     "setSessionCookie",
     function (this: FastifyReply, token: string, expires: Date) {
-      return this.setCookie(cookieName, token, {
-        signed: true,
-        expires,
-      })
+      return this.setCookie(cookieName, token, { expires })
     },
   )
 
