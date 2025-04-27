@@ -5,11 +5,8 @@ import { navigateTo, useRequestEvent, useRequestHeaders } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
-import type { User } from "@webapp/orm"
-
+import type { AuthUser } from "../../module"
 import useAuthOptions from "../composables/useAuthOptions"
-
-type AuthUser = Omit<User, "password">
 
 const fetchWithCookie = async <T>(
   request: NitroFetchRequest,
@@ -56,7 +53,7 @@ const useAuthUserStore = defineStore("auth-user", () => {
   const user = ref<Readonly<AuthUser> | null>(null)
 
   // Set authenticated user state
-  const setAuthUser = (value?: Readonly<AuthUser> | null) => {
+  const setAuthUser = (value?: AuthUser | null) => {
     user.value = value ?? null
   }
 
