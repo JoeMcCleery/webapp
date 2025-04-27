@@ -6,7 +6,6 @@
     "defu": "^6.1.4"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^3.16.2",
     "@pinia/nuxt": "^0.11.0",
     "@webapp/orm": "workspace:*",
