@@ -1,52 +1,10 @@
-import defu from "defu"
-import { appendResponseHeader } from "h3"
-import type { NitroFetchOptions, NitroFetchRequest } from "nitropack"
-import { navigateTo, useRequestEvent, useRequestHeaders } from "nuxt/app"
+import { navigateTo } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
 import type { AuthUser } from "../../module"
+import useAuthFetch from "../composables/useAuthFetch"
 import useAuthOptions from "../composables/useAuthOptions"
-
-const fetchWithCookie = async <T>(
-  request: NitroFetchRequest,
-  opts: NitroFetchOptions<typeof request> = {},
-) => {
-  // Get module options
-  const options = useAuthOptions()
-  // Get cookies from client
-  const headers = useRequestHeaders(["cookie"])
-  // Create fetch options object
-  const fetchOptions = defu(opts || {}, {
-    method: "POST",
-    headers,
-    credentials: "include",
-  } as NitroFetchOptions<typeof request>)
-  // Get current request event (only exists in server context)
-  const event = useRequestEvent()
-  // Fetch on server or client
-  if (event) {
-    // Send raw request to api
-    const res = await $fetch.raw<T>(request, {
-      ...fetchOptions,
-      baseURL: options.serverApiUrl,
-    })
-    // Get cookies from api response
-    const cookies = res.headers.getSetCookie()
-    // Attach cookies to incoming request
-    for (const cookie of cookies) {
-      appendResponseHeader(event, "set-cookie", cookie)
-    }
-    // Return the data of the request
-    return res._data
-  } else {
-    // Send request to api and return result
-    return await $fetch<T>(request, {
-      ...fetchOptions,
-      baseURL: options.apiUrl,
-    })
-  }
-}
 
 const useAuthUserStore = defineStore("auth-user", () => {
   // Authenticated user state
@@ -72,7 +30,7 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await fetchWithCookie(options.routes.login, { body: data })
+    await useAuthFetch(options.routes.login, { body: data })
     // Fetch user
     await fetchUser()
   }
@@ -81,7 +39,7 @@ export const useAuthStore = defineStore("auth", () => {
   const invalidateSession = async () => {
     // Invalidate session if there is a user
     if (authUserStore.user) {
-      await fetchWithCookie(options.routes.logout)
+      await useAuthFetch(options.routes.logout)
       authUserStore.setAuthUser(null)
     }
   }
@@ -98,7 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
   const invalidateAllSessions = async () => {
     // Invalidate all sessions if there is a user
     if (authUserStore.user) {
-      await fetchWithCookie(options.routes.logoutAll)
+      await useAuthFetch(options.routes.logoutAll)
       authUserStore.setAuthUser(null)
     }
   }
@@ -113,9 +71,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Try fetch the logged in user from the server
   const fetchUser = async () => {
-    const result = await fetchWithCookie<AuthUser | null>(
-      options.routes.fetchUser,
-    )
+    const result = await useAuthFetch<AuthUser | null>(options.routes.fetchUser)
     authUserStore.setAuthUser(result)
     return result
   }
@@ -129,14 +85,14 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await fetchWithCookie(options.routes.signup, { body: data })
+    await useAuthFetch(options.routes.signup, { body: data })
     // Fetch user
     await fetchUser()
   }
 
   const forgotPassword = async (data: { email: string }) => {
     // Send request
-    const result = await fetchWithCookie(options.routes.forgotPassword, {
+    const result = await useAuthFetch(options.routes.forgotPassword, {
       body: data,
     })
     return result
@@ -150,7 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await fetchWithCookie(options.routes.resetPassword, { body: data })
+    await useAuthFetch(options.routes.resetPassword, { body: data })
     // Fetch user
     await fetchUser()
   }
