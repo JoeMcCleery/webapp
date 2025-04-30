@@ -14,7 +14,7 @@ declare module "fastify" {
   }
 
   interface FastifyReply {
-    setCSRFCookie(token: string): FastifyReply
+    setCSRFCookie(token: string, expires: Date): FastifyReply
     clearCSRFCookie(): FastifyReply
   }
 }
@@ -28,8 +28,8 @@ export const csrfMiddleware = fp(function (app) {
 
   app.decorateReply(
     "setCSRFCookie",
-    function (this: FastifyReply, token: string) {
-      return this.setCookie(cookieName, token)
+    function (this: FastifyReply, token: string, expires: Date) {
+      return this.setCookie(cookieName, token, { expires })
     },
   )
 

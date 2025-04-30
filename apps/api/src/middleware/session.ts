@@ -60,7 +60,7 @@ export const sessionMiddleware = fp(function (app) {
       // Create CSRF token
       const csrfToken = createCSRFToken(session.id)
       // Set CSRF cookie
-      this.setCSRFCookie(csrfToken)
+      this.setCSRFCookie(csrfToken, session.expiresAt)
       return
     },
   )
