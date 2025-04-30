@@ -23,7 +23,7 @@ function createHMAC(sessionId: string, randomToken: string) {
 export function validateCSRF(sessionId: string, csrfToken: string) {
   const csrfParts = csrfToken.split(".")
   const hmacFromCSRF = decodeHex(csrfParts[0])
-  const randomToken = csrfParts[0]
+  const randomToken = csrfParts[1]
   const expectedHMAC = createHMAC(sessionId, randomToken)
   return constantTimeEqual(expectedHMAC, hmacFromCSRF)
 }
