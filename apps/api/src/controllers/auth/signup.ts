@@ -1,10 +1,6 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import {
-  createSession,
-  generateUniqueToken,
-  invalidateSession,
-} from "@webapp/auth"
+import { invalidateSession } from "@webapp/auth"
 import { dangerousPrisma, defaultPrisma, Prisma } from "@webapp/orm"
 import type { User } from "@webapp/orm"
 
@@ -37,17 +33,16 @@ export const signup: FastifyPluginCallback = function (app) {
       // Check if user was created
       if (!user) {
         console.log("Could not create a new user")
-        return rep.status(422).send({ error: "Invalid signup request" })
+        return rep
+          .status(422)
+          .send({ error: "Unprocessable Content: Invalid signup request" })
       }
       // Invalidate existing session
       if (req.user && req.session) {
         await invalidateSession(req.user, req.session.id)
       }
-      // Create new session
-      const token = generateUniqueToken()
-      const session = await createSession(token, user)
-      // Set session cookie
-      rep.setSessionCookie(token, session.expiresAt)
+      // Create new user session
+      await rep.createUserSession(user)
       // Success
       return rep.status(200).send()
     },

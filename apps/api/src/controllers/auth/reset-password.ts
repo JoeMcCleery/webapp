@@ -1,8 +1,6 @@
 import type { FastifyPluginCallback } from "fastify"
 
 import {
-  createSession,
-  generateUniqueToken,
   invalidatePasswordReset,
   invalidateSession,
   tokenBucketConsume,
@@ -37,7 +35,9 @@ export const resetPassword: FastifyPluginCallback = function (app) {
     // Verify new password
     if (newPassword !== confirmPassword) {
       console.log("Resetting password faild, passwords did not match")
-      return rep.status(422).send({ error: "Passwords did not match" })
+      return rep
+        .status(422)
+        .send({ error: "Unprocessable Content: Passwords did not match" })
     }
     // Safely set new user password
     const enhancedPrisma = getEnhancedPrisma({ user })
@@ -51,11 +51,8 @@ export const resetPassword: FastifyPluginCallback = function (app) {
     if (req.user && req.session) {
       await invalidateSession(req.user, req.session.id)
     }
-    // Create new session
-    const sessionToken = generateUniqueToken()
-    const session = await createSession(sessionToken, user)
-    // Set session cookie
-    rep.setSessionCookie(sessionToken, session.expiresAt)
+    // Create new user session
+    await rep.createUserSession(user)
     // Success
     return rep.status(200).send()
   })

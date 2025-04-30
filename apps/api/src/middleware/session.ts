@@ -2,7 +2,12 @@ import type { FastifyAuthFunction } from "@fastify/auth"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import fp from "fastify-plugin"
 
-import { validateSessionToken } from "@webapp/auth"
+import {
+  createCSRFToken,
+  createSession,
+  generateUniqueToken,
+  validateSessionToken,
+} from "@webapp/auth"
 import type { Session, User } from "@webapp/orm"
 
 declare module "fastify" {
@@ -19,10 +24,11 @@ declare module "fastify" {
   interface FastifyReply {
     setSessionCookie(token: string, expires: Date): FastifyReply
     clearSessionCookie(): FastifyReply
+    createUserSession(user: User): Promise<void>
   }
 }
 
-const cookieName = "session-token"
+const cookieName = "__Secure-session"
 
 export const sessionMiddleware = fp(function (app) {
   app.decorateRequest("session")
@@ -43,6 +49,22 @@ export const sessionMiddleware = fp(function (app) {
     return this.clearCookie(cookieName)
   })
 
+  app.decorateReply(
+    "createUserSession",
+    async function (this: FastifyReply, user: User) {
+      // Create new session
+      const token = generateUniqueToken()
+      const session = await createSession(token, user)
+      // Set session cookie
+      this.setSessionCookie(token, session.expiresAt)
+      // Create CSRF token
+      const csrfToken = createCSRFToken(session.id)
+      // Set CSRF cookie
+      this.setCSRFCookie(csrfToken)
+      return
+    },
+  )
+
   app.decorate<FastifyAuthFunction>(
     "validateSession",
     async function (req, rep) {
@@ -50,7 +72,7 @@ export const sessionMiddleware = fp(function (app) {
       const token = req.getSessionCookie()
       // If token is not present
       if (!token) {
-        console.log("Token missing from request")
+        console.log("Missing session token")
         return
       }
       // Get session and user from token

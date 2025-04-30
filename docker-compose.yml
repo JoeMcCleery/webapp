@@ -117,7 +117,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
-      COOKIE_SECRET: ${COOKIE_SECRET}
+      CSRF_SECRET: ${CSRF_SECRET}
     volumes:
       - ./apps/api/src:/usr/app/src
       - /usr/app/node_modules/

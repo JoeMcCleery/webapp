@@ -16,7 +16,6 @@ declare module "@nuxt/schema" {
 }
 
 export interface ModuleOptions {
-  cookieName: string
   globalMiddleware: boolean
   redirectRoute: string
   ignoredRoutes: string[]
@@ -42,7 +41,6 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: "auth",
   },
   defaults: {
-    cookieName: "session-token",
     globalMiddleware: true,
     redirectRoute: "/login",
     ignoredRoutes: ["/signup", "/forgot-password", "/reset-password"],

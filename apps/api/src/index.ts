@@ -1,6 +1,7 @@
 import fastifyAuth from "@fastify/auth"
 import fastifyCookie from "@fastify/cookie"
 import cors from "@fastify/cors"
+import fastifyHelmet from "@fastify/helmet"
 import Fastify from "fastify"
 
 import { middleware } from "./middleware"
@@ -20,6 +21,7 @@ const init = async function () {
     ],
     credentials: true,
   })
+  app.register(fastifyHelmet)
   app.register(fastifyCookie, {
     parseOptions: {
       httpOnly: true,

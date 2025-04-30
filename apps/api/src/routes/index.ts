@@ -9,6 +9,7 @@ export const routes: FastifyPluginCallback = function (app) {
     app.auth([
       app.throttlerConsume,
       app.validateSession,
+      app.validateCSRF,
       app.tokenBucketConsume(1),
     ]),
   )

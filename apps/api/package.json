@@ -5,6 +5,7 @@
     "@fastify/auth": "^5.0.2",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.0.1",
+    "@fastify/helmet": "^13.0.1",
     "@webapp/auth": "workspace:*",
     "@webapp/orm": "workspace:*",
     "@zenstackhq/server": "^2.13.1",

@@ -1,12 +1,7 @@
 import { compare } from "bcryptjs"
 import type { FastifyPluginCallback } from "fastify"
 
-import {
-  createSession,
-  generateUniqueToken,
-  invalidateSession,
-  tokenBucketConsume,
-} from "@webapp/auth"
+import { invalidateSession, tokenBucketConsume } from "@webapp/auth"
 import { dangerousPrisma } from "@webapp/orm"
 
 export const login: FastifyPluginCallback = function (app) {
@@ -43,11 +38,8 @@ export const login: FastifyPluginCallback = function (app) {
       if (req.user && req.session) {
         await invalidateSession(req.user, req.session.id)
       }
-      // Create new session
-      const token = generateUniqueToken()
-      const session = await createSession(token, user)
-      // Set session cookie
-      rep.setSessionCookie(token, session.expiresAt)
+      // Create new user session
+      await rep.createUserSession(user)
       // Success
       return rep.status(200).send()
     },
