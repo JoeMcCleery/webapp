@@ -2,7 +2,8 @@ import type { FastifyAuthFunction } from "@fastify/auth"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import fp from "fastify-plugin"
 
-import { validateCSRF } from "@webapp/auth"
+import { createCSRFToken, validateCSRF } from "@webapp/auth"
+import type { Session } from "@webapp/orm"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -14,7 +15,7 @@ declare module "fastify" {
   }
 
   interface FastifyReply {
-    setCSRFCookie(token: string, expires: Date): FastifyReply
+    setCSRFCookie(session: Session): FastifyReply
     clearCSRFCookie(): FastifyReply
   }
 }
@@ -28,8 +29,11 @@ export const csrfMiddleware = fp(function (app) {
 
   app.decorateReply(
     "setCSRFCookie",
-    function (this: FastifyReply, token: string, expires: Date) {
-      return this.setCookie(cookieName, token, { expires })
+    function (this: FastifyReply, session: Session) {
+      const csrfToken = createCSRFToken(session.id)
+      return this.setCookie(cookieName, csrfToken, {
+        expires: session.expiresAt,
+      })
     },
   )
 
@@ -65,6 +69,8 @@ export const csrfMiddleware = fp(function (app) {
       rep.status(401)
       throw new Error("Unauthorized: Invalid or missing CSRF token")
     }
+    // Refresh CSRF cookie
+    rep.setCSRFCookie(session)
     // Continue with request
     return
   })

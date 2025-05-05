@@ -9,8 +9,9 @@ export const logout: FastifyPluginCallback = async function (app) {
       // Invalidate session
       await invalidateSession(req.user, req.session.id)
     }
-    // Clear session cookie
+    // Clear session cookies
     rep.clearSessionCookie()
+    rep.clearCSRFCookie()
     // Success
     return rep.status(200).send()
   })
@@ -23,8 +24,9 @@ export const logoutAll: FastifyPluginCallback = function (app) {
       // Invalidate all sessions
       await invalidateAllSessions(req.user)
     }
-    // Clear session cookie
+    // Clear session cookies
     rep.clearSessionCookie()
+    rep.clearCSRFCookie()
     // Success
     return rep.status(200).send()
   })

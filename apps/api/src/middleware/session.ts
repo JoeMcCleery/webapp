@@ -3,7 +3,6 @@ import type { FastifyReply, FastifyRequest } from "fastify"
 import fp from "fastify-plugin"
 
 import {
-  createCSRFToken,
   createSession,
   generateUniqueToken,
   validateSessionToken,
@@ -22,7 +21,7 @@ declare module "fastify" {
   }
 
   interface FastifyReply {
-    setSessionCookies(token: string, session: Session): FastifyReply
+    setSessionCookie(token: string, expires: Date): FastifyReply
     clearSessionCookie(): FastifyReply
     createUserSession(user: User): Promise<void>
   }
@@ -39,13 +38,9 @@ export const sessionMiddleware = fp(function (app) {
   })
 
   app.decorateReply(
-    "setSessionCookies",
-    function (this: FastifyReply, token: string, session: Session) {
-      const expires = session.expiresAt
-      this.setCookie(cookieName, token, { expires })
-      const csrfToken = createCSRFToken(session.id)
-      this.setCSRFCookie(csrfToken, expires)
-      return this
+    "setSessionCookie",
+    function (this: FastifyReply, token: string, expires: Date) {
+      return this.setCookie(cookieName, token, { expires })
     },
   )
 
@@ -60,7 +55,9 @@ export const sessionMiddleware = fp(function (app) {
       const token = generateUniqueToken()
       const session = await createSession(token, user)
       // Set session cookies
-      this.setSessionCookies(token, session)
+      this.setSessionCookie(token, session.expiresAt)
+      // Set csrf cookie
+      this.setCSRFCookie(session)
       return
     },
   )
@@ -85,7 +82,7 @@ export const sessionMiddleware = fp(function (app) {
         return
       }
       // Refresh the session cookie
-      rep.setSessionCookies(token, session)
+      rep.setSessionCookie(token, session.expiresAt)
       // Attach session and user to request object
       req.user = user
       req.session = session
