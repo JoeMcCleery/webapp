@@ -11,7 +11,7 @@ declare module "fastify" {
   }
 
   interface FastifyRequest {
-    getCSRFCookie(): string | undefined
+    getCSRFToken(): string | undefined
   }
 
   interface FastifyReply {
@@ -21,10 +21,16 @@ declare module "fastify" {
 }
 
 const cookieName = "__Secure-csrf"
+const headerName = "X-CSRF-TOKEN"
 
 export const csrfMiddleware = fp(function (app) {
-  app.decorateRequest("getCSRFCookie", function (this: FastifyRequest) {
-    return this.cookies[cookieName]
+  app.decorateRequest("getCSRFToken", function (this: FastifyRequest) {
+    const cookie = this.cookies[cookieName]
+    const header = this.headers[headerName]
+    if (!cookie || !header || cookie !== header) {
+      return undefined
+    }
+    return cookie
   })
 
   app.decorateReply(
@@ -51,11 +57,13 @@ export const csrfMiddleware = fp(function (app) {
       req.user = undefined
       return
     }
-    // Get CSRF token from request cookies
-    const csrfToken = req.getCSRFCookie()
+    // Get CSRF token from request cookies and headers
+    const csrfToken = req.getCSRFToken()
     // If CSRF token is not present
     if (!csrfToken) {
       console.log("Missing CSRF token")
+      // Clear CSRF cookie (in case it was just the header missing)
+      rep.clearCSRFCookie()
       // Invalidate session
       await invalidateSession(user, session.id)
       rep.clearSessionCookie()

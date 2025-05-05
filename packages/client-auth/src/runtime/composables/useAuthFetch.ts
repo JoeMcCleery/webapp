@@ -20,10 +20,12 @@ export default async function useAuthFetch<T>(
   const options = useAuthOptions()
   // Get cookies from client
   const headers = useRequestHeaders(["cookie"])
+  // TODO Get saved csrf token
+  const csrfToken = "my-awesome-token"
   // Create fetch options object
   const fetchOptions = defu(opts || {}, {
     method: "POST",
-    headers,
+    headers: { ...headers, "X-CSRF-TOKEN": csrfToken },
     credentials: "include",
     baseURL: import.meta.server ? options.serverApiUrl : options.apiUrl,
   } as NitroFetchOptions<typeof request>)
