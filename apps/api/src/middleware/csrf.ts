@@ -38,25 +38,22 @@ export const csrfMiddleware = fp(function (app) {
   })
 
   app.decorate<FastifyAuthFunction>("validateCSRF", async function (req, rep) {
+    // Get the current session and user
+    const { session, user } = req
+    // If session or user is not present
+    if (!session || !user) {
+      console.log("Could not validate CSRF, session or user not found")
+      req.session = undefined
+      req.user = undefined
+      return
+    }
     // Get CSRF token from request cookies
     const csrfToken = req.getCSRFCookie()
     // If CSRF token is not present
     if (!csrfToken) {
       console.log("Missing CSRF token")
-      // rep.status(401)
-      // throw new Error("Unauthorized: Invalid or missing CSRF token")
-      return
-    }
-    // Get the current session
-    const session = req.session
-    // If session is not present
-    if (!session) {
-      console.log("Could not validate CSRF, session not found")
-      // Clear CSRF cookie
-      // rep.clearCSRFCookie()
-      // rep.status(401)
-      // throw new Error("Unauthorized: Invalid or missing CSRF token")
-      return
+      rep.status(401)
+      throw new Error("Unauthorized: Invalid or missing CSRF token")
     }
     // Validate the CSRF token
     const valid = validateCSRF(session.id, csrfToken)
@@ -64,9 +61,9 @@ export const csrfMiddleware = fp(function (app) {
     if (!valid) {
       console.log("Invalid CSRF token")
       // Clear CSRF cookie
-      // rep.clearCSRFCookie()
-      // rep.status(401)
-      // throw new Error("Unauthorized: Invalid or missing CSRF token!")
+      rep.clearCSRFCookie()
+      rep.status(401)
+      throw new Error("Unauthorized: Invalid or missing CSRF token")
     }
     // Continue with request
     return
