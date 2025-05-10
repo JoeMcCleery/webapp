@@ -15,13 +15,14 @@ declare module "fastify" {
   }
 
   interface FastifyReply {
-    setCSRFCookie(session: Session): FastifyReply
+    setCSRFCookie(session: Session): string
+    refreshCSRFCookie(token: string, expires: Date): FastifyReply
     clearCSRFCookie(): FastifyReply
   }
 }
 
 const cookieName = "__Secure-csrf"
-const headerName = "X-CSRF-TOKEN"
+const headerName = "x-csrf-token"
 
 export const csrfMiddleware = fp(function (app) {
   app.decorateRequest("getCSRFToken", function (this: FastifyRequest) {
@@ -37,9 +38,17 @@ export const csrfMiddleware = fp(function (app) {
     "setCSRFCookie",
     function (this: FastifyReply, session: Session) {
       const csrfToken = createCSRFToken(session.id)
-      return this.setCookie(cookieName, csrfToken, {
+      this.setCookie(cookieName, csrfToken, {
         expires: session.expiresAt,
       })
+      return csrfToken
+    },
+  )
+
+  app.decorateReply(
+    "refreshCSRFCookie",
+    function (this: FastifyReply, token: string, expires: Date) {
+      return this.setCookie(cookieName, token, { expires })
     },
   )
 
@@ -86,7 +95,7 @@ export const csrfMiddleware = fp(function (app) {
       return
     }
     // Refresh CSRF cookie
-    rep.setCSRFCookie(session)
+    rep.refreshCSRFCookie(csrfToken, session.expiresAt)
     // Continue with request
     return
   })

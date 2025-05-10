@@ -22,6 +22,8 @@ export interface ModuleOptions {
   apiUrl: string
   serverApiUrl: string
   authenticationRequired: boolean
+  csrfCookieName: string
+  csrfHeaderName: string
   routes: {
     login: string
     logout: string
@@ -47,6 +49,8 @@ export default defineNuxtModule<ModuleOptions>({
     apiUrl: "",
     serverApiUrl: "",
     authenticationRequired: true,
+    csrfCookieName: "__Secure-csrf",
+    csrfHeaderName: "x-csrf-token",
     routes: {
       login: "/auth/login",
       logout: "/auth/logout",

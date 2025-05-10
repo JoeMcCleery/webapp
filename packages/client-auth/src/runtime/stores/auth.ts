@@ -18,6 +18,18 @@ const useAuthUserStore = defineStore("auth-user", () => {
   return { user, setAuthUser }
 })
 
+const useCsrfStore = defineStore("csrf", () => {
+  // Csrf token state
+  const token = ref<string | null>(null)
+
+  // Set csrf token state
+  const setCsrfToken = (value?: string | null) => {
+    token.value = value ?? null
+  }
+
+  return { token, setCsrfToken }
+})
+
 export const useAuthStore = defineStore("auth", () => {
   // Get module options
   const options = useAuthOptions()
@@ -25,12 +37,19 @@ export const useAuthStore = defineStore("auth", () => {
   // Get auth user store
   const authUserStore = useAuthUserStore()
 
+  // Get csrf store
+  const csrfStore = useCsrfStore()
+
   // Login using email and password
   const login = async (data: { email: string; password: string }) => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await useAuthFetch(options.routes.login, { body: data })
+    const csrfToken = await useAuthFetch<string>(options.routes.login, {
+      body: data,
+    })
+    // Set csrf token
+    csrfStore.setCsrfToken(csrfToken)
     // Fetch user
     await fetchUser()
   }
@@ -41,6 +60,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (authUserStore.user) {
       await useAuthFetch(options.routes.logout)
       authUserStore.setAuthUser(null)
+      csrfStore.setCsrfToken(null)
     }
   }
 
@@ -58,6 +78,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (authUserStore.user) {
       await useAuthFetch(options.routes.logoutAll)
       authUserStore.setAuthUser(null)
+      csrfStore.setCsrfToken(null)
     }
   }
 
@@ -85,7 +106,11 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await useAuthFetch(options.routes.signup, { body: data })
+    const csrfToken = await useAuthFetch<string>(options.routes.signup, {
+      body: data,
+    })
+    // Set csrf token
+    csrfStore.setCsrfToken(csrfToken)
     // Fetch user
     await fetchUser()
   }
@@ -106,13 +131,19 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    await useAuthFetch(options.routes.resetPassword, { body: data })
+    const csrfToken = await useAuthFetch<string>(options.routes.resetPassword, {
+      body: data,
+    })
+    // Set csrf token
+    csrfStore.setCsrfToken(csrfToken)
     // Fetch user
     await fetchUser()
   }
 
   return {
     user: computed(() => authUserStore.user),
+    csrfToken: computed(() => csrfStore.token),
+    setCsrfToken: csrfStore.setCsrfToken,
     login,
     invalidateSession,
     logout,

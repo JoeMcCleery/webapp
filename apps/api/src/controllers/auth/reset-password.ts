@@ -52,8 +52,8 @@ export const resetPassword: FastifyPluginCallback = function (app) {
       await invalidateSession(req.user, req.session.id)
     }
     // Create new user session
-    await rep.createUserSession(user)
+    const csrfToken = await rep.createUserSession(user)
     // Success
-    return rep.status(200).send()
+    return rep.status(200).send(csrfToken)
   })
 }

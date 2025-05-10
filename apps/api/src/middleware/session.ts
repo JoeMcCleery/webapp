@@ -23,7 +23,7 @@ declare module "fastify" {
   interface FastifyReply {
     setSessionCookie(token: string, expires: Date): FastifyReply
     clearSessionCookie(): FastifyReply
-    createUserSession(user: User): Promise<void>
+    createUserSession(user: User): Promise<string>
   }
 }
 
@@ -57,8 +57,9 @@ export const sessionMiddleware = fp(function (app) {
       // Set session cookies
       this.setSessionCookie(token, session.expiresAt)
       // Set csrf cookie
-      this.setCSRFCookie(session)
-      return
+      const csrfToken = this.setCSRFCookie(session)
+      // Return csrf token
+      return csrfToken
     },
   )
 

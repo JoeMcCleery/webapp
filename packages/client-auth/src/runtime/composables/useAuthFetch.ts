@@ -3,6 +3,7 @@ import { appendResponseHeader } from "h3"
 import type { NitroFetchOptions } from "nitropack"
 import { useNuxtApp, useRequestEvent, useRequestHeaders } from "nuxt/app"
 
+import { useAuthStore } from "../stores/auth"
 import useAuthOptions from "./useAuthOptions"
 
 export default async function useAuthFetch<T>(
@@ -18,35 +19,39 @@ export default async function useAuthFetch<T>(
   }
   // Get module options
   const options = useAuthOptions()
+  // Get auth store
+  const authStore = useAuthStore()
   // Get cookies from client
-  const headers = useRequestHeaders(["cookie"])
-  // TODO Get saved csrf token
-  const csrfToken = "my-awesome-token"
+  const { cookie } = useRequestHeaders(["cookie"])
+  // Get csrf token from cookies on server
+  if (import.meta.server && !authStore.csrfToken) {
+    const csrfToken = cookie
+      ?.split("; ")
+      .find((c) => c.startsWith(options.csrfCookieName))
+      ?.split("=")[1]
+    authStore.setCsrfToken(csrfToken)
+  }
   // Create fetch options object
   const fetchOptions = defu(opts || {}, {
     method: "POST",
-    headers: { ...headers, "X-CSRF-TOKEN": csrfToken },
+    headers: { cookie, [options.csrfHeaderName]: authStore.csrfToken },
     credentials: "include",
     baseURL: import.meta.server ? options.serverApiUrl : options.apiUrl,
   } as NitroFetchOptions<typeof request>)
-  // Get current request event (only exists in server context)
+  // Get current request event (only available on server)
   const event = useRequestEvent()
-  // Fetch on server or client
-  if (event) {
-    // Send raw request to api
-    const res = await $fetch.raw<T>(request, fetchOptions)
+  // Send raw request to api
+  const res = await $fetch.raw<T>(request, fetchOptions)
+  if (import.meta.server && event) {
     // Get cookies from api response
     const cookies = res.headers.getSetCookie()
-    // Attach cookies to incoming request
-    for (const cookie of cookies) {
-      appendResponseHeader(event, "set-cookie", cookie)
+    // Proxy response cookies to client
+    for (const c of cookies) {
+      appendResponseHeader(event, "set-cookie", c)
     }
-    // Attach result to nuxt payload
+    // Attach result to nuxt payload to prevent duplicate requests
     nuxtApp.payload[request] = res._data
-    // Return the data of the request
-    return res._data
-  } else {
-    // Send request to api and return result
-    return await $fetch<T>(request, fetchOptions)
   }
+  // Return the data of the request
+  return res._data
 }
