@@ -1,6 +1,10 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import { createPasswordReset, generateUniqueToken } from "@webapp/auth"
+import {
+  createPasswordReset,
+  generateOTPCode,
+  generateUniqueToken,
+} from "@webapp/auth"
 
 export const forgotPassword: FastifyPluginCallback = function (app) {
   app.post<{
@@ -10,15 +14,16 @@ export const forgotPassword: FastifyPluginCallback = function (app) {
     const { email } = req.body
     // Create new password reset
     const token = generateUniqueToken()
-    const passwordReset = await createPasswordReset(token, email)
+    const otpCode = generateOTPCode(6)
+    const passwordReset = await createPasswordReset(otpCode, token, email)
     // Send email to user with new password reset link
     if (passwordReset) {
-      console.log(`Sending new password reset token: ${token}`)
-      // TODO send email with password reset link
+      console.log(`Sending new password reset otp: ${otpCode}`)
+      // TODO send email with password reset otp
     } else {
       console.log("Failed to create new password reset")
     }
     // Always success as to not disclose account existance
-    return rep.status(200).send()
+    return rep.status(200).send(token)
   })
 }

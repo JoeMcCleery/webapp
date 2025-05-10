@@ -4,40 +4,39 @@ import {
   invalidatePasswordReset,
   invalidateSession,
   tokenBucketConsume,
-  validatePasswordResetToken,
+  validatePasswordReset,
 } from "@webapp/auth"
 import { getEnhancedPrisma } from "@webapp/orm"
 
 export const resetPassword: FastifyPluginCallback = function (app) {
   app.post<{
-    Body: { newPassword: string; confirmPassword: string; token: string }
+    Body: {
+      newPassword: string
+      confirmPassword: string
+      token: string
+      otpToken: string
+    }
   }>("", async function (req, rep) {
     // Get reset password token from request body
-    const { token } = req.body
+    const { token, otpToken } = req.body
     // Verify password reset
-    const { passwordReset, user } = await validatePasswordResetToken(token)
+    const { passwordReset, user } = await validatePasswordReset(token, otpToken)
     // If password reset or user not present, return error
     if (!passwordReset || !user) {
       console.log("Password reset or user not found")
-      return rep
-        .status(401)
-        .send({ error: "Unauthorized: Invalid password reset request" })
+      return rep.unauthorized("Invalid password reset request")
     }
     // Check user token limits
     if (!tokenBucketConsume(user.id, 1)) {
       console.log(`Not enough tokens for user id: ${req.user!.id}`)
-      return rep
-        .status(429)
-        .send({ error: "Too many requests: Not enough tokens" })
+      return rep.tooManyRequests("Not enough tokens")
     }
     // Get new password info from request body
     const { newPassword, confirmPassword } = req.body
     // Verify new password
     if (newPassword !== confirmPassword) {
       console.log("Resetting password faild, passwords did not match")
-      return rep
-        .status(422)
-        .send({ error: "Unprocessable Content: Passwords did not match" })
+      return rep.unprocessableEntity("Passwords did not match")
     }
     // Safely set new user password
     const enhancedPrisma = getEnhancedPrisma({ user })

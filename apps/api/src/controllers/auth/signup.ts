@@ -33,9 +33,7 @@ export const signup: FastifyPluginCallback = function (app) {
       // Check if user was created
       if (!user) {
         console.log("Could not create a new user")
-        return rep
-          .status(422)
-          .send({ error: "Unprocessable Content: Invalid signup request" })
+        return rep.unprocessableEntity("Invalid signup request")
       }
       // Invalidate existing session
       if (req.user && req.session) {

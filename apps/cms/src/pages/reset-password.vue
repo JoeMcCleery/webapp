@@ -1,14 +1,14 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="New Password" name="newPassword">
-      <UInput v-model="state.newPassword" type="password" />
+    <UFormField label="New Password" name="newPassword" required>
+      <InputPassword v-model="state.newPassword" />
     </UFormField>
 
-    <UFormField label="Confirm Password" name="confirmPassword">
-      <UInput v-model="state.confirmPassword" type="password" />
+    <UFormField label="Confirm Password" name="confirmPassword" required>
+      <InputPassword v-model="state.confirmPassword" />
     </UFormField>
 
-    <UButton type="submit"> Submit </UButton>
+    <ButtonSubmit />
   </UForm>
 </template>
 
@@ -16,6 +16,8 @@
 import type { FormSubmitEvent } from "@nuxt/ui"
 import * as z from "zod"
 
+const route = useRoute()
+const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z
@@ -40,18 +42,17 @@ const state = reactive<Partial<Schema>>({
   confirmPassword: undefined,
 })
 
-const route = useRoute()
-const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  let { token } = route.query
+  let { token, otpToken } = route.query
   if (typeof token != "string") {
     token = ""
   }
-  await auth.resetUserPassword({ ...event.data, token })
-  toast.add({
-    title: "Success",
-    description: "The form has been submitted.",
-    color: "success",
+  if (typeof otpToken != "string") {
+    otpToken = ""
+  }
+  await catchErrorAsToast(async () => {
+    await auth.resetUserPassword({ ...event.data, token, otpToken })
+    router.push("/")
   })
 }
 </script>

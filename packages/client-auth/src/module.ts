@@ -31,6 +31,7 @@ export interface ModuleOptions {
     fetchUser: string
     signup: string
     forgotPassword: string
+    confirmOTPCode: string
     resetPassword: string
   }
 }
@@ -45,7 +46,12 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     globalMiddleware: true,
     redirectRoute: "/login",
-    ignoredRoutes: ["/signup", "/forgot-password", "/reset-password"],
+    ignoredRoutes: [
+      "/signup",
+      "/forgot-password",
+      "/confirm-otp",
+      "/reset-password",
+    ],
     apiUrl: "",
     serverApiUrl: "",
     authenticationRequired: true,
@@ -58,6 +64,7 @@ export default defineNuxtModule<ModuleOptions>({
       fetchUser: "/auth/user",
       signup: "/auth/signup",
       forgotPassword: "/auth/forgot-password",
+      confirmOTPCode: "/auth/confirm-otp",
       resetPassword: "/auth/reset-password",
     },
   },

@@ -19,20 +19,18 @@ export const login: FastifyPluginCallback = function (app) {
       // Check if user exists
       if (!user) {
         console.log(`Couldn't login, couldn't find user with email: ${email}`)
-        return rep.status(401).send({ error: "Invalid email or password" })
+        return rep.unauthorized("Invalid email or password")
       }
       // Compare password with stored password hash
       const passwordMatch = await compare(password, user.password)
       if (!passwordMatch) {
         console.log("Couldn't login, provided password isn't a match")
-        return rep.status(401).send({ error: "Invalid email or password" })
+        return rep.unauthorized("Invalid email or password")
       }
       // Check user token limits
       if (!tokenBucketConsume(user.id, 1)) {
         console.log(`Not enough tokens for user id: ${user.id}`)
-        return rep
-          .status(429)
-          .send({ error: "Too many requests: Not enough tokens" })
+        return rep.tooManyRequests("Not enough tokens")
       }
       // Invalidate existing session
       if (req.user && req.session) {

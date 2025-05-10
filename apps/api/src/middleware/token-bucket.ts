@@ -19,9 +19,7 @@ export const tokenBucketMiddleware = fp(function (app) {
         // Check user token limits
         if (req.user && !tokenBucketConsume(req.user.id, cost)) {
           console.log(`Not enough tokens for user id: ${req.user.id}`)
-          rep
-            .status(429)
-            .send({ error: "Too many requests: Not enough tokens" })
+          rep.tooManyRequests("Not enough tokens")
           // Request failed
           return done(new Error())
         }

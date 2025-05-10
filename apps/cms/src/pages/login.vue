@@ -1,21 +1,25 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="Email" name="email">
+    <UFormField label="Email" name="email" required>
       <UInput v-model="state.email" />
     </UFormField>
 
-    <UFormField label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
+    <UFormField label="Password" name="password" required>
+      <InputPassword v-model="state.password" />
+      <ULink to="/forgot-password"> Forgotten password? </ULink>
     </UFormField>
 
-    <UButton type="submit"> Submit </UButton>
+    <ButtonSubmit text="Login" icon="i-lucide-log-in" />
   </UForm>
+
+  <ULink to="/signup"> Don't have an account? Signup </ULink>
 </template>
 
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@nuxt/ui"
 import * as z from "zod"
 
+const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z.object({
@@ -30,13 +34,10 @@ const state = reactive<Partial<Schema>>({
   password: undefined,
 })
 
-const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  await auth.login(event.data)
-  toast.add({
-    title: "Success",
-    description: "The form has been submitted.",
-    color: "success",
+  await catchErrorAsToast(async () => {
+    await auth.login(event.data)
+    router.push("/")
   })
 }
 </script>

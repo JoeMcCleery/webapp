@@ -92,9 +92,9 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Try fetch the logged in user from the server
   const fetchUser = async () => {
-    const result = await useAuthFetch<AuthUser | null>(options.routes.fetchUser)
-    authUserStore.setAuthUser(result)
-    return result
+    const user = await useAuthFetch<AuthUser | null>(options.routes.fetchUser)
+    authUserStore.setAuthUser(user)
+    return user
   }
 
   // Create a new user account
@@ -117,16 +117,28 @@ export const useAuthStore = defineStore("auth", () => {
 
   const forgotPassword = async (data: { email: string }) => {
     // Send request
-    const result = await useAuthFetch(options.routes.forgotPassword, {
+    const resetPasswordToken = await useAuthFetch<string>(
+      options.routes.forgotPassword,
+      {
+        body: data,
+      },
+    )
+    return resetPasswordToken
+  }
+
+  const confirmOTPCode = async (data: { otpCode: string; token: string }) => {
+    // Send request
+    const otpToken = await useAuthFetch<string>(options.routes.confirmOTPCode, {
       body: data,
     })
-    return result
+    return otpToken
   }
 
   const resetUserPassword = async (data: {
     newPassword: string
     confirmPassword: string
     token: string
+    otpToken: string
   }) => {
     // Invalidate existing session
     await invalidateSession()
@@ -152,6 +164,7 @@ export const useAuthStore = defineStore("auth", () => {
     fetchUser,
     signup,
     forgotPassword,
+    confirmOTPCode,
     resetUserPassword,
   }
 })

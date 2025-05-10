@@ -1,10 +1,10 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="Email" name="email">
+    <UFormField label="Email" name="email" required>
       <UInput v-model="state.email" />
     </UFormField>
 
-    <UButton type="submit"> Submit </UButton>
+    <ButtonSubmit />
   </UForm>
 </template>
 
@@ -12,6 +12,7 @@
 import type { FormSubmitEvent } from "@nuxt/ui"
 import * as z from "zod"
 
+const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z.object({
@@ -24,13 +25,15 @@ const state = reactive<Partial<Schema>>({
   email: undefined,
 })
 
-const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  await auth.forgotPassword(event.data)
-  toast.add({
-    title: "Success",
-    description: "The form has been submitted.",
-    color: "success",
+  await catchErrorAsToast(async () => {
+    const token = await auth.forgotPassword(event.data)
+    router.push({
+      name: "confirm-otp",
+      query: {
+        token,
+      },
+    })
   })
 }
 </script>

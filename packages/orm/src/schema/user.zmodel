@@ -15,7 +15,7 @@ model User extends Base {
 }
 
 model Session extends Base {
-  tokenHash String   @unique
+  tokenHash String   @unique @omit
   expiresAt DateTime
   userId    String   @db.Uuid @default(auth().id)
 
@@ -26,11 +26,13 @@ model Session extends Base {
 }
 
 model PasswordReset extends Base {
-  tokenHash String   @unique
-  expiresAt DateTime
-  userId    String   @db.Uuid @unique @default(auth().id)
+  otpCodeHash  String?  @omit
+  otpTokenHash String?  @omit
+  tokenHash    String   @unique @omit
+  expiresAt    DateTime
+  userId       String   @db.Uuid @unique @default(auth().id)
 
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  user         User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   // users manage own password resets
   @@allow('all', auth() == user)

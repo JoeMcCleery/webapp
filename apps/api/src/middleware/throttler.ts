@@ -17,9 +17,7 @@ export const throttlerMiddleware = fp(function (app) {
       // Check throttle limits for request ip
       if (!throttlerConsume(req.ip)) {
         console.log(`Throttler limit exceeded for ip: ${req.ip}`)
-        rep
-          .status(429)
-          .send({ error: "Too many requests: Throttler limit exceded" })
+        rep.tooManyRequests("Throttler limit exceded")
         // Request failed
         return done(new Error())
       }

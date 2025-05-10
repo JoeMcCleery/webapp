@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>Welcome!</h1>
-    <UButton @click="auth.logout"> Logout </UButton>
-    <UButton @click="auth.logoutAll"> Logout All </UButton>
+    <div class="flex gap-2">
+      <ButtonLogout />
+      <ButtonLogout all />
+    </div>
   </div>
 </template>
 
