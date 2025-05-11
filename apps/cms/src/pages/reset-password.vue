@@ -1,11 +1,11 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="New Password" name="newPassword" required>
-      <InputPassword v-model="state.newPassword" />
+      <InputPassword v-model="state.newPassword" class="w-full" />
     </UFormField>
 
     <UFormField label="Confirm Password" name="confirmPassword" required>
-      <InputPassword v-model="state.confirmPassword" />
+      <InputPassword v-model="state.confirmPassword" class="w-full" />
     </UFormField>
 
     <ButtonSubmit />

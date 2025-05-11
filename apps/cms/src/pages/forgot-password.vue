@@ -1,7 +1,7 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="Email" name="email" required>
-      <UInput v-model="state.email" />
+      <UInput v-model="state.email" class="w-full" />
     </UFormField>
 
     <ButtonSubmit />

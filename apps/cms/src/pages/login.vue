@@ -1,11 +1,11 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="Email" name="email" required>
-      <UInput v-model="state.email" />
+      <UInput v-model="state.email" class="w-full" />
     </UFormField>
 
     <UFormField label="Password" name="password" required>
-      <InputPassword v-model="state.password" />
+      <InputPassword v-model="state.password" class="w-full" />
       <ULink to="/forgot-password"> Forgotten password? </ULink>
     </UFormField>
 

@@ -2,8 +2,8 @@
   <div>
     <h1>Default Layout</h1>
     <p>
-      Logged in user: {{ auth.user?.name
-      }}{{ auth.user?.userRoles.map((r) => r.name) }}
+      Logged in user: {{ auth.user?.givenName }} {{ auth.user?.familyName }}
+      {{ auth.user?.userRoles.map((r) => r.name) }}
     </p>
     <slot />
   </div>

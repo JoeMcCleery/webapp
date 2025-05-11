@@ -100,7 +100,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Create a new user account
   const signup = async (data: {
-    name: string
+    givenName: string
+    familyName?: string
     email: string
     password: string
   }) => {

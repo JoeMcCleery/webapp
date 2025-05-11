@@ -2,7 +2,8 @@ import 'abstract/base'
 import 'access-control'
 
 model User extends Base {
-  name          String         @encrypted @length(min: 1)
+  givenName     String         @encrypted @length(min: 1)
+  familyName    String?        @encrypted
   email         String         @email @encrypted @unique
   emailHash     String         @unique @omit
   password      String         @password @omit @length(min: 8, max: 64)

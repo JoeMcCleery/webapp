@@ -1,15 +1,19 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="Name" name="name" required>
-      <UInput v-model="state.name" />
+    <UFormField label="Given Name" name="givenName" required>
+      <UInput v-model="state.givenName" class="w-full" />
+    </UFormField>
+
+    <UFormField label="Family Name" name="familyName" hint="Optional">
+      <UInput v-model="state.familyName" class="w-full" />
     </UFormField>
 
     <UFormField label="Email" name="email" required>
-      <UInput v-model="state.email" />
+      <UInput v-model="state.email" class="w-full" />
     </UFormField>
 
     <UFormField label="Password" name="password" required>
-      <InputPassword v-model="state.password" />
+      <InputPassword v-model="state.password" class="w-full" />
     </UFormField>
 
     <ButtonSubmit text="Singup" icon="i-lucide-user-round-plus" />
@@ -26,7 +30,8 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
+  givenName: z.string().min(1, "Name is required"),
+  familyName: z.string().optional(),
   email: z.string().email("Invalid email"),
   password: z
     .string()
@@ -37,7 +42,8 @@ const schema = z.object({
 type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
-  name: undefined,
+  givenName: undefined,
+  familyName: undefined,
   email: undefined,
   password: undefined,
 })
