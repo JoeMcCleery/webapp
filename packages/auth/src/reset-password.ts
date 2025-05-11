@@ -1,7 +1,7 @@
 import { dangerousPrisma, getEnhancedPrisma } from "@webapp/orm"
-import type { User } from "@webapp/orm"
+import type { AuthUser } from "@webapp/orm"
 
-import { generateHashFromToken, generateUniqueToken } from "./token-generator"
+import { generateHash, generateUniqueToken } from "./token-generator"
 
 const passwordResetDuration = 1000 * 60 * 15 // 15 minutes
 
@@ -10,10 +10,18 @@ export async function createPasswordReset(
   token: string,
   email: string,
 ) {
-  // Find user using email
+  // Get email hash
+  const emailHash = generateHash(email, {
+    salt: process.env.DB_EMAIL_SALT,
+    lowercase: true,
+  })
+  // Find user using email hash
   const user = await dangerousPrisma.user.findUnique({
     where: {
-      email,
+      emailHash,
+    },
+    include: {
+      userRoles: { include: { permissions: true } },
     },
   })
   // If no user found return null
@@ -23,8 +31,8 @@ export async function createPasswordReset(
   // Invalidate existing password reset
   await invalidatePasswordReset(user)
   // Create a new password reset
-  const tokenHash = generateHashFromToken(token)
-  const otpCodeHash = generateHashFromToken(otpCode)
+  const tokenHash = generateHash(token)
+  const otpCodeHash = generateHash(otpCode)
   const prisma = getEnhancedPrisma({ user })
   const passwordReset = await prisma.passwordReset.create({
     data: {
@@ -39,15 +47,15 @@ export async function createPasswordReset(
 
 export async function confirmOTPCode(otpCode: string, token: string) {
   // Check if password reset exists
-  const tokenHash = generateHashFromToken(token)
-  const otpCodeHash = generateHashFromToken(otpCode)
+  const tokenHash = generateHash(token)
+  const otpCodeHash = generateHash(otpCode)
   const result = await dangerousPrisma.passwordReset.findUnique({
     where: {
       otpCodeHash,
       tokenHash,
     },
     include: {
-      user: true,
+      user: { include: { userRoles: { include: { permissions: true } } } },
     },
   })
   if (!result) {
@@ -66,7 +74,7 @@ export async function confirmOTPCode(otpCode: string, token: string) {
   }
   // Create OTP token
   const otpToken = generateUniqueToken()
-  const otpTokenHash = generateHashFromToken(otpToken)
+  const otpTokenHash = generateHash(otpToken)
   // Update password reset with new OTP token, and invalidate used OTP code
   const prisma = getEnhancedPrisma({ user })
   const updatedPasswordReset = await prisma.passwordReset.update({
@@ -79,15 +87,15 @@ export async function confirmOTPCode(otpCode: string, token: string) {
 
 export async function validatePasswordReset(token: string, otpToken: string) {
   // Check if password reset exists
-  const tokenHash = generateHashFromToken(token)
-  const otpTokenHash = generateHashFromToken(otpToken)
+  const tokenHash = generateHash(token)
+  const otpTokenHash = generateHash(otpToken)
   const result = await dangerousPrisma.passwordReset.findUnique({
     where: {
       otpTokenHash,
       tokenHash,
     },
     include: {
-      user: true,
+      user: { include: { userRoles: { include: { permissions: true } } } },
     },
   })
   if (!result) {
@@ -108,7 +116,7 @@ export async function validatePasswordReset(token: string, otpToken: string) {
   return { passwordReset, user }
 }
 
-export async function invalidatePasswordReset(user: User) {
+export async function invalidatePasswordReset(user: AuthUser) {
   // Invalidate password reset by deleting it from the database
   const prisma = getEnhancedPrisma({ user })
   // NOTE: "deleteMany" wont throw if there is no existing password reset

@@ -1,8 +1,8 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import { invalidateSession } from "@webapp/auth"
+import { generateHash, invalidateSession } from "@webapp/auth"
 import { dangerousPrisma, defaultPrisma, Prisma } from "@webapp/orm"
-import type { User } from "@webapp/orm"
+import type { AuthUser } from "@webapp/orm"
 
 export const signup: FastifyPluginCallback = function (app) {
   app.post<{ Body: { name: string; email: string; password: string } }>(
@@ -10,22 +10,29 @@ export const signup: FastifyPluginCallback = function (app) {
     async function (req, rep) {
       // Get user info from request body
       const { name, email, password } = req.body
+      // Get email hash
+      const emailHash = generateHash(email, {
+        salt: process.env.DB_EMAIL_SALT,
+        lowercase: true,
+      })
       // Create new user
-      let user: User | null = null
+      let user: AuthUser | null = null
       try {
         // Safely create new user
         await defaultPrisma.user.create({
-          data: { name, email, password },
+          data: { name, email: email.toLowerCase(), emailHash, password },
         })
       } catch (e) {
         // Catch "result is not allowed to be read back" error then try get created user using dangerous prisma client
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           // https://www.prisma.io/docs/orm/reference/error-reference#p2004
           if (e.code === "P2004") {
+            // Find user with email hash
             user = await dangerousPrisma.user.findUnique({
               where: {
-                email,
+                emailHash,
               },
+              include: { userRoles: { include: { permissions: true } } },
             })
           }
         }

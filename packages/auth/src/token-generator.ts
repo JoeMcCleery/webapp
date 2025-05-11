@@ -13,8 +13,24 @@ export function generateUniqueToken() {
   return token
 }
 
-export function generateHashFromToken(token: string) {
-  return encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
+type HashOptions = {
+  salt?: string
+  lowercase?: boolean
+}
+
+const defaultHashOptions: HashOptions = {
+  salt: "",
+  lowercase: false,
+}
+
+export function generateHash(value: string, options: HashOptions = {}) {
+  options = { ...defaultHashOptions, ...options }
+  if (options.lowercase) {
+    value = value.toLowerCase()
+  }
+  return encodeHexLowerCase(
+    sha256(new TextEncoder().encode(value + options.salt)),
+  )
 }
 
 const random: RandomReader = {

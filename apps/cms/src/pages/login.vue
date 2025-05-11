@@ -24,7 +24,10 @@ const auth = useAuthStore()
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
-  password: z.string().min(8, "Must be at least 8 characters"),
+  password: z
+    .string()
+    .min(8, "Must be at least 8 characters")
+    .max(64, "Must be less than 64 characters"),
 })
 
 type Schema = z.output<typeof schema>

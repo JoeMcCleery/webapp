@@ -7,8 +7,6 @@ import {
 } from "@nuxt/kit"
 import { defu } from "defu"
 
-import type { User } from "@webapp/orm"
-
 declare module "@nuxt/schema" {
   interface PublicRuntimeConfig {
     auth: ModuleOptions
@@ -35,8 +33,6 @@ export interface ModuleOptions {
     resetPassword: string
   }
 }
-
-export type AuthUser = Omit<User, "password">
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

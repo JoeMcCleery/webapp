@@ -1,7 +1,11 @@
 import { compare } from "bcryptjs"
 import type { FastifyPluginCallback } from "fastify"
 
-import { invalidateSession, tokenBucketConsume } from "@webapp/auth"
+import {
+  generateHash,
+  invalidateSession,
+  tokenBucketConsume,
+} from "@webapp/auth"
 import { dangerousPrisma } from "@webapp/orm"
 
 export const login: FastifyPluginCallback = function (app) {
@@ -10,11 +14,17 @@ export const login: FastifyPluginCallback = function (app) {
     async function (req, rep) {
       // Get user credentials from request body
       const { email, password } = req.body
-      // Find user using email
+      // Get email hash
+      const emailHash = generateHash(email, {
+        salt: process.env.DB_EMAIL_SALT,
+        lowercase: true,
+      })
+      // Find user using email hash
       const user = await dangerousPrisma.user.findUnique({
         where: {
-          email,
+          emailHash,
         },
+        include: { userRoles: { include: { permissions: true } } },
       })
       // Check if user exists
       if (!user) {

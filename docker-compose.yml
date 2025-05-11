@@ -118,6 +118,8 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
       CSRF_SECRET: ${CSRF_SECRET}
+      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
+      DB_EMAIL_SALT: ${DB_EMAIL_SALT}
     volumes:
       - ./apps/api/src:/usr/app/src
       - /usr/app/node_modules/

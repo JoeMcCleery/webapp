@@ -22,8 +22,14 @@ const auth = useAuthStore()
 
 const schema = z
   .object({
-    newPassword: z.string().min(8, "Must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Must be at least 8 characters"),
+    newPassword: z
+      .string()
+      .min(8, "Must be at least 8 characters")
+      .max(64, "Must be less than 64 characters"),
+    confirmPassword: z
+      .string()
+      .min(8, "Must be at least 8 characters")
+      .max(64, "Must be less than 64 characters"),
   })
   .superRefine(({ newPassword, confirmPassword }, ctx) => {
     if (newPassword != confirmPassword) {

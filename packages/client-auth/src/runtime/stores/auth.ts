@@ -2,7 +2,8 @@ import { navigateTo } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
-import type { AuthUser } from "../../module"
+import type { AuthUser } from "@webapp/orm"
+
 import useAuthFetch from "../composables/useAuthFetch"
 import useAuthOptions from "../composables/useAuthOptions"
 

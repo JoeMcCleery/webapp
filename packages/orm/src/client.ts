@@ -1,13 +1,15 @@
-import { EnhancementContext, EnhancementOptions } from "@zenstackhq/runtime"
+import type { EnhancementContext } from "@zenstackhq/runtime"
 
-import { PrismaClient, User } from "./generated/client"
+import { getEncryptionKey } from "./encryption"
+import { PrismaClient } from "./generated/client"
 import { enhance } from "./generated/zenstack/enhance"
+import { AuthUser } from "./types"
 
 export const dangerousPrisma = new PrismaClient()
 
-export const getEnhancedPrisma = (
-  context: EnhancementContext<User>,
-  options?: EnhancementOptions,
-) => enhance(dangerousPrisma, context, options)
+export const getEnhancedPrisma = (context: EnhancementContext<AuthUser> = {}) =>
+  enhance(dangerousPrisma, context, {
+    encryption: { encryptionKey: getEncryptionKey() },
+  })
 
-export const defaultPrisma = enhance(dangerousPrisma)
+export const defaultPrisma = getEnhancedPrisma()

@@ -7,7 +7,7 @@ import {
   generateUniqueToken,
   validateSessionToken,
 } from "@webapp/auth"
-import type { Session, User } from "@webapp/orm"
+import type { AuthUser, Session } from "@webapp/orm"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -16,14 +16,14 @@ declare module "fastify" {
 
   interface FastifyRequest {
     session?: Session
-    user?: User
+    user?: AuthUser
     getSessionCookie(): string | undefined
   }
 
   interface FastifyReply {
     setSessionCookie(token: string, expires: Date): FastifyReply
     clearSessionCookie(): FastifyReply
-    createUserSession(user: User): Promise<string>
+    createUserSession(user: AuthUser): Promise<string>
   }
 }
 
@@ -50,7 +50,7 @@ export const sessionMiddleware = fp(function (app) {
 
   app.decorateReply(
     "createUserSession",
-    async function (this: FastifyReply, user: User) {
+    async function (this: FastifyReply, user: AuthUser) {
       // Create new session
       const token = generateUniqueToken()
       const session = await createSession(token, user)
