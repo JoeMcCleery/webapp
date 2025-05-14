@@ -9,11 +9,11 @@ import {
 import { dangerousPrisma } from "@webapp/orm"
 
 export const login: FastifyPluginCallback = function (app) {
-  app.post<{ Body: { email: string; password: string } }>(
+  app.post<{ Body: { email: string; password: string; persist: boolean } }>(
     "",
     async function (req, rep) {
-      // Get user credentials from request body
-      const { email, password } = req.body
+      // Get data from request body
+      const { email, password, persist } = req.body
       // Get email hash
       const emailHash = generateHash(email, {
         salt: process.env.DB_EMAIL_SALT,
@@ -50,7 +50,7 @@ export const login: FastifyPluginCallback = function (app) {
         await invalidateSession(req.user, req.session.id)
       }
       // Create new user session
-      const csrfToken = await rep.createUserSession(user)
+      const csrfToken = await rep.createUserSession(user, persist)
       // Success
       return rep.status(200).send(csrfToken)
     },

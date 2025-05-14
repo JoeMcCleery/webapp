@@ -19,7 +19,7 @@ model User extends Base {
   // anyone can create users
   @@allow('create', true)
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])
@@ -29,6 +29,7 @@ model User extends Base {
 model Session extends Base {
   tokenHash String   @unique @omit
   expiresAt DateTime
+  persist   Boolean  @deny('update', true) // cannot change persist after creation
   userId    String   @db.Uuid @default(auth().id)
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -36,7 +37,7 @@ model Session extends Base {
   // users manage own sessions
   @@allow('all', auth() == user)
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])
@@ -55,7 +56,7 @@ model PasswordReset extends Base {
   // users manage own password resets
   @@allow('all', auth() == user)
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])

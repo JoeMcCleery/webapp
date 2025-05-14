@@ -42,7 +42,11 @@ export const useAuthStore = defineStore("auth", () => {
   const csrfStore = useCsrfStore()
 
   // Login using email and password
-  const login = async (data: { email: string; password: string }) => {
+  const login = async (data: {
+    email: string
+    password: string
+    persist: boolean
+  }) => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
@@ -104,6 +108,7 @@ export const useAuthStore = defineStore("auth", () => {
     familyName?: string
     email: string
     password: string
+    persist: boolean
   }) => {
     // Invalidate existing session
     await invalidateSession()
@@ -139,6 +144,7 @@ export const useAuthStore = defineStore("auth", () => {
   const resetUserPassword = async (data: {
     newPassword: string
     confirmPassword: string
+    persist: boolean
     token: string
     otpToken: string
   }) => {

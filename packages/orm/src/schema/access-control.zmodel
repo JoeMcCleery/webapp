@@ -20,10 +20,10 @@ model UserRole extends Base {
   users       User[]
   permissions Permission[]
 
-  // Users can read their own roles
+  // users can read their own roles
   @@allow('read', users?[id == auth().id])
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'update')]])
@@ -37,10 +37,10 @@ model Permission extends Base {
 
   userRole    UserRole     @relation(fields: [userRoleId], references: [id], onDelete: Cascade)
 
-  // Users can read their own role permissions
+  // users can read their own role permissions
   @@allow('read', check(userRole, 'read'))
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'update')]])
@@ -53,7 +53,7 @@ model ModelWithPermissions extends Base {
 
   @@delegate(modelType)
 
-  // Model based permissions
+  // model based permissions
   @@allow('create', auth().userModelPermissions?[modelId == id && has(operations, 'create')])
   @@allow('read', auth().userModelPermissions?[modelId == id && has(operations, 'read')])
   @@allow('update', auth().userModelPermissions?[modelId == id && has(operations, 'update')])
@@ -68,10 +68,10 @@ model UserModelPermission extends Base {
   model      ModelWithPermissions @relation(fields: [modelId], references: [id], onDelete: Cascade)
   user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Users can read their own model permissions
+  // users can read their own model permissions
   @@allow('read', auth() == user)
 
-  // Role based permissions
+  // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'update')]])

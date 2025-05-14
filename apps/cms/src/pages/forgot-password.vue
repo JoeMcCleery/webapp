@@ -6,6 +6,8 @@
 
     <ButtonSubmit />
   </UForm>
+
+  <ULink to="/login"> Remember password? Login </ULink>
 </template>
 
 <script setup lang="ts">

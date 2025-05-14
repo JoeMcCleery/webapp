@@ -16,6 +16,10 @@
       <InputPassword v-model="state.password" class="w-full" />
     </UFormField>
 
+    <UFormField name="persist">
+      <UCheckbox v-model="state.persist" label="Remember me" />
+    </UFormField>
+
     <ButtonSubmit text="Singup" icon="i-lucide-user-round-plus" />
   </UForm>
 
@@ -37,6 +41,7 @@ const schema = z.object({
     .string()
     .min(8, "Must be at least 8 characters")
     .max(64, "Must be less than 64 characters"),
+  persist: z.boolean(),
 })
 
 type Schema = z.output<typeof schema>
@@ -46,6 +51,7 @@ const state = reactive<Partial<Schema>>({
   familyName: undefined,
   email: undefined,
   password: undefined,
+  persist: false,
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

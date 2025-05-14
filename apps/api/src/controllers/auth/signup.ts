@@ -11,10 +11,11 @@ export const signup: FastifyPluginCallback = function (app) {
       familyName?: string
       email: string
       password: string
+      persist: boolean
     }
   }>("", async function (req, rep) {
-    // Get user info from request body
-    const { givenName, familyName, email, password } = req.body
+    // Get data from request body
+    const { givenName, familyName, email, password, persist } = req.body
     // Get email hash
     const emailHash = generateHash(email, {
       salt: process.env.DB_EMAIL_SALT,
@@ -61,7 +62,7 @@ export const signup: FastifyPluginCallback = function (app) {
       await invalidateSession(req.user, req.session.id)
     }
     // Create new user session
-    const csrfToken = await rep.createUserSession(user)
+    const csrfToken = await rep.createUserSession(user, persist)
     // Success
     return rep.status(200).send(csrfToken)
   })

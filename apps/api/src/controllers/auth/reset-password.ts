@@ -13,12 +13,13 @@ export const resetPassword: FastifyPluginCallback = function (app) {
     Body: {
       newPassword: string
       confirmPassword: string
+      persist: boolean
       token: string
       otpToken: string
     }
   }>("", async function (req, rep) {
-    // Get reset password token from request body
-    const { token, otpToken } = req.body
+    // Get data from request body
+    const { newPassword, confirmPassword, token, otpToken, persist } = req.body
     // Verify password reset
     const { passwordReset, user } = await validatePasswordReset(token, otpToken)
     // If password reset or user not present, return error
@@ -31,8 +32,6 @@ export const resetPassword: FastifyPluginCallback = function (app) {
       console.log(`Not enough tokens for user id: ${req.user!.id}`)
       return rep.tooManyRequests("Not enough tokens")
     }
-    // Get new password info from request body
-    const { newPassword, confirmPassword } = req.body
     // Verify new password
     if (newPassword !== confirmPassword) {
       console.log("Resetting password faild, passwords did not match")
@@ -51,7 +50,7 @@ export const resetPassword: FastifyPluginCallback = function (app) {
       await invalidateSession(req.user, req.session.id)
     }
     // Create new user session
-    const csrfToken = await rep.createUserSession(user)
+    const csrfToken = await rep.createUserSession(user, persist)
     // Success
     return rep.status(200).send(csrfToken)
   })

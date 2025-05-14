@@ -8,6 +8,10 @@
       <InputPassword v-model="state.confirmPassword" class="w-full" />
     </UFormField>
 
+    <UFormField name="persist">
+      <UCheckbox v-model="state.persist" label="Remember me" />
+    </UFormField>
+
     <ButtonSubmit />
   </UForm>
 </template>
@@ -30,6 +34,7 @@ const schema = z
       .string()
       .min(8, "Must be at least 8 characters")
       .max(64, "Must be less than 64 characters"),
+    persist: z.boolean(),
   })
   .superRefine(({ newPassword, confirmPassword }, ctx) => {
     if (newPassword != confirmPassword) {
@@ -46,6 +51,7 @@ type Schema = z.output<typeof schema>
 const state = reactive<Partial<Schema>>({
   newPassword: undefined,
   confirmPassword: undefined,
+  persist: false,
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
