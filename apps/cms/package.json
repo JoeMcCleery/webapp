@@ -16,7 +16,7 @@
     "typescript": "^5.8.3",
     "vue-tsc": "^2.2.8"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",

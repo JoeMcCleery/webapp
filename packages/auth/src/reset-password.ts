@@ -22,6 +22,7 @@ export async function createPasswordReset(
     },
     include: {
       userRoles: { include: { permissions: true } },
+      userModelPermissions: true,
     },
   })
   // If no user found return null
@@ -55,7 +56,12 @@ export async function confirmOTPCode(otpCode: string, token: string) {
       tokenHash,
     },
     include: {
-      user: { include: { userRoles: { include: { permissions: true } } } },
+      user: {
+        include: {
+          userRoles: { include: { permissions: true } },
+          userModelPermissions: true,
+        },
+      },
     },
   })
   if (!result) {
@@ -95,7 +101,12 @@ export async function validatePasswordReset(token: string, otpToken: string) {
       tokenHash,
     },
     include: {
-      user: { include: { userRoles: { include: { permissions: true } } } },
+      user: {
+        include: {
+          userRoles: { include: { permissions: true } },
+          userModelPermissions: true,
+        },
+      },
     },
   })
   if (!result) {

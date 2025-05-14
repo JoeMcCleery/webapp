@@ -24,7 +24,10 @@ export const login: FastifyPluginCallback = function (app) {
         where: {
           emailHash,
         },
-        include: { userRoles: { include: { permissions: true } } },
+        include: {
+          userRoles: { include: { permissions: true } },
+          userModelPermissions: true,
+        },
       })
       // Check if user exists
       if (!user) {

@@ -28,7 +28,12 @@ export async function validateSessionToken(token: string) {
       tokenHash,
     },
     include: {
-      user: { include: { userRoles: { include: { permissions: true } } } },
+      user: {
+        include: {
+          userRoles: { include: { permissions: true } },
+          userModelPermissions: true,
+        },
+      },
     },
   })
   if (!result) {

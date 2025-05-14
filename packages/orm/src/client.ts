@@ -3,7 +3,7 @@ import type { EnhancementContext } from "@zenstackhq/runtime"
 import { getEncryptionKey } from "./encryption"
 import { PrismaClient } from "./generated/client"
 import { enhance } from "./generated/zenstack/enhance"
-import { AuthUser } from "./types"
+import type { AuthUser } from "./types"
 
 export const dangerousPrisma = new PrismaClient()
 

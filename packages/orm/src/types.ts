@@ -1,15 +1,3 @@
-import { Prisma } from "./generated/client"
+import type { auth } from "./generated/zenstack/enhance"
 
-const authUser = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: {
-    userRoles: {
-      include: { permissions: true },
-    },
-  },
-  omit: {
-    password: true,
-    emailHash: true,
-  },
-})
-
-export type AuthUser = Prisma.UserGetPayload<typeof authUser>
+export type AuthUser = auth.User

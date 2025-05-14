@@ -10,7 +10,10 @@ export const user: FastifyPluginCallback = function (app) {
       const prisma = getEnhancedPrisma({ user: req.user })
       const user = await prisma.user.findUnique({
         where: { id: req.user.id },
-        include: { userRoles: { include: { permissions: true } } },
+        include: {
+          userRoles: { include: { permissions: true } },
+          userModelPermissions: true,
+        },
       })
       // Send user object back to client
       console.log("Send authenticated user object to client")

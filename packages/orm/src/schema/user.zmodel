@@ -2,21 +2,24 @@ import 'abstract/base'
 import 'access-control'
 
 model User extends Base {
-  givenName     String         @encrypted @length(min: 1)
-  familyName    String?        @encrypted
-  email         String         @email @encrypted @unique
-  emailHash     String         @unique @omit
-  password      String         @password @omit @length(min: 8, max: 64)
+  givenName            String                @encrypted @length(min: 1)
+  familyName           String?               @encrypted
+  email                String                @email @encrypted @unique
+  emailHash            String                @unique @omit
+  password             String                @password @omit @length(min: 8, max: 64)
 
-  sessions      Session[]
-  passwordReset PasswordReset?
-  userRoles     UserRole[]
+  sessions             Session[]
+  passwordReset        PasswordReset?
+  userRoles            UserRole[]
+  userModelPermissions UserModelPermission[]
 
   // full access by self
   @@allow('all', auth() == this)
+
   // anyone can create users
   @@allow('create', true)
 
+  // Role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])
@@ -33,6 +36,7 @@ model Session extends Base {
   // users manage own sessions
   @@allow('all', auth() == user)
 
+  // Role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])
@@ -51,6 +55,7 @@ model PasswordReset extends Base {
   // users manage own password resets
   @@allow('all', auth() == user)
 
+  // Role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
   @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'update')]])

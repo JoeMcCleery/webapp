@@ -10,7 +10,7 @@ export const encryptValue = async (value: string) => {
   return await encrypter.encrypt(value)
 }
 
-export const decryptValue = async (value: string) => {
+export const decryptValue = async (encryptedValue: string) => {
   const encrypter = new Decrypter([getEncryptionKey()])
-  return await encrypter.decrypt(value)
+  return await encrypter.decrypt(encryptedValue)
 }
