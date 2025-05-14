@@ -21,6 +21,6 @@
 </template>
 
 <script setup lang="ts">
-const show = ref(false)
 const password = defineModel<string>()
+const show = defineModel<boolean>("show", { default: false })
 </script>

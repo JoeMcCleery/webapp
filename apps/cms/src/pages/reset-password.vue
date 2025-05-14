@@ -1,11 +1,19 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="New Password" name="newPassword" required>
-      <InputPassword v-model="state.newPassword" class="w-full" />
+      <InputPassword
+        v-model="state.newPassword"
+        v-model:show="showPasswords"
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField label="Confirm Password" name="confirmPassword" required>
-      <InputPassword v-model="state.confirmPassword" class="w-full" />
+      <InputPassword
+        v-model="state.confirmPassword"
+        v-model:show="showPasswords"
+        class="w-full"
+      />
     </UFormField>
 
     <UFormField name="persist">
@@ -24,6 +32,8 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
+const showPasswords = ref(false)
+
 const schema = z
   .object({
     newPassword: z
@@ -40,7 +50,7 @@ const schema = z
     if (newPassword != confirmPassword) {
       ctx.addIssue({
         code: "custom",
-        message: "Passwords do not match",
+        message: "Passwords must match",
         path: ["confirmPassword"],
       })
     }
