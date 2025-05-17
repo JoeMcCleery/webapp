@@ -127,8 +127,12 @@ services:
       CSRF_SECRET: ${CSRF_SECRET}
       DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
       DB_EMAIL_SALT: ${DB_EMAIL_SALT}
-    # volumes:
-    # - .:/usr/app
+      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
+    volumes:
+      - ./apps/api/src:/usr/app/apps/api/src
+      - ./packages/auth/src:/usr/app/packages/auth/src
+      - ./packages/orm/src:/usr/app/packages/orm/src
+      - /usr/app/packages/orm/src/generated
     restart: unless-stopped
     hostname: api.${DOMAIN_APP}
     labels:
@@ -150,8 +154,11 @@ services:
       DOMAIN_APP: ${DOMAIN_APP}
       NUXT_DOMAIN_APP: ${DOMAIN_APP}
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
-    # volumes:
-    # - .:/usr/app
+    volumes:
+      - ./apps/admin/src:/usr/app/apps/admin/src
+      - ./packages/client-auth/src:/usr/app/packages/client-auth/src
+      - ./packages/orm/src:/usr/app/packages/orm/src
+      - /usr/app/packages/orm/src/generated
     restart: unless-stopped
     hostname: admin.${DOMAIN_APP}
     labels:
