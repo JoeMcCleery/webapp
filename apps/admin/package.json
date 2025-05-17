@@ -1,5 +1,5 @@
 {
-  "name": "@webapp/cms",
+  "name": "@webapp/admin",
   "dependencies": {
     "@nuxt/fonts": "^0.11.1",
     "@nuxt/image": "^1.10.0",

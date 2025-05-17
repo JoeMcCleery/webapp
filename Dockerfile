@@ -17,7 +17,7 @@ RUN pnpm run --filter=@webapp/orm db:generate
 RUN pnpm deploy --filter=@webapp/orm --legacy /packages/orm
 # Deploy apps
 RUN pnpm deploy --filter=@webapp/api --legacy /apps/api
-RUN pnpm deploy --filter=@webapp/cms --legacy /apps/cms
+RUN pnpm deploy --filter=@webapp/admin --legacy /apps/admin
 
 FROM base AS orm
 WORKDIR /usr/package
@@ -31,8 +31,8 @@ COPY --from=build /apps/api .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]
 
-FROM base AS cms
+FROM base AS admin
 WORKDIR /usr/app
-COPY --from=build /apps/cms .
+COPY --from=build /apps/admin .
 EXPOSE 3000
 CMD [ "pnpm", "dev" ]

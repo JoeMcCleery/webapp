@@ -18,7 +18,7 @@ const init = async function () {
   app.register(cors, {
     origin: [
       `https://api.${process.env.DOMAIN_APP}`,
-      `https://cms.${process.env.DOMAIN_APP}`,
+      `https://admin.${process.env.DOMAIN_APP}`,
     ],
     credentials: true,
   })
