@@ -1,11 +1,11 @@
 packages:
   - apps/*
   - packages/*
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@prisma/client'
   - '@prisma/engines'
+  - '@tailwindcss/oxide'
   - esbuild
   - prisma
   - sharp

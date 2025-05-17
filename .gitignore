@@ -2,10 +2,8 @@
 node_modules
 
 # envs
-**/.env
-**/.env.*
-.env
-.env.*
+**.env
+**.env.*
 !.env.example
 
 # builds

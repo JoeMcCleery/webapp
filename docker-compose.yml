@@ -81,7 +81,7 @@ services:
   # Local dev only
   orm:
     build:
-      target: orm
+      target: orm-dev
       args:
         PACKAGE_NAME: "@webapp/orm"
         TURBO_TEAM: ${TURBO_TEAM}
@@ -93,9 +93,8 @@ services:
     environment:
       DOMAIN_APP: ${DOMAIN_APP}
       DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-    volumes:
-      - ./packages/orm/src:/usr/app/src
-      - /usr/app/node_modules/
+    # volumes:
+    # - .:/usr/app
     restart: unless-stopped
     labels:
       - subdomain=orm
@@ -104,7 +103,7 @@ services:
 
   api:
     build:
-      target: api
+      target: api-dev
       args:
         PACKAGE_NAME: "@webapp/api"
         TURBO_TEAM: ${TURBO_TEAM}
@@ -128,9 +127,8 @@ services:
       CSRF_SECRET: ${CSRF_SECRET}
       DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
       DB_EMAIL_SALT: ${DB_EMAIL_SALT}
-    volumes:
-      - ./apps/api/src:/usr/app/src
-      - /usr/app/node_modules/
+    # volumes:
+    # - .:/usr/app
     restart: unless-stopped
     hostname: api.${DOMAIN_APP}
     labels:
@@ -140,20 +138,20 @@ services:
 
   admin:
     build:
-      target: admin
+      target: admin-dev
       args:
         PACKAGE_NAME: "@webapp/admin"
+        NUXT_DOMAIN_APP: ${DOMAIN_APP}
         TURBO_TEAM: ${TURBO_TEAM}
         TURBO_TOKEN: ${TURBO_TOKEN}
     image: ${PROJECT_PREFIX}_admin
     container_name: ${PROJECT_PREFIX}_admin
     environment:
       DOMAIN_APP: ${DOMAIN_APP}
+      NUXT_DOMAIN_APP: ${DOMAIN_APP}
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
-    volumes:
-      - ./apps/admin/src:/usr/app/src
-      - ./apps/admin/nuxt.config.ts:/usr/app/nuxt.config.ts
-      - /usr/app/node_modules/
+    # volumes:
+    # - .:/usr/app
     restart: unless-stopped
     hostname: admin.${DOMAIN_APP}
     labels:

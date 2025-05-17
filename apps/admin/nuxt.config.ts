@@ -11,8 +11,11 @@ export default defineNuxtConfig({
   srcDir: "src/",
   modules: ["@nuxt/ui", "@nuxt/image", "@webapp/client-auth"],
   css: ["~/assets/css/main.css"],
+  runtimeConfig: {
+    domainApp: process.env.NUXT_DOMAIN_APP || "",
+  },
   auth: {
-    apiUrl: `https://api.${process.env.DOMAIN_APP}`,
-    serverApiUrl: `http://api.${process.env.DOMAIN_APP}:3000`,
+    apiUrl: `https://api.${process.env.NUXT_DOMAIN_APP}`,
+    serverApiUrl: `http://api.${process.env.NUXT_DOMAIN_APP}:3000`,
   },
 })

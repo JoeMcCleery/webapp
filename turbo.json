@@ -3,7 +3,11 @@
   "tasks": {
     "generate": {
       "dependsOn": ["^generate"],
-      "outputs": ["src/generated/**"]
+      "outputs": ["src/generated/**", ".nuxt/**"]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".output/**", "dist/**"]
     },
     "dev": {
       "persistent": true,

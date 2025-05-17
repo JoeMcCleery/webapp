@@ -5,7 +5,7 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "syncpack": "^13.0.3"
+    "syncpack": "alpha"
   },
   "engines": {
     "node": ">=22.14.0"
@@ -13,7 +13,7 @@
   "packageManager": "pnpm@10.11.0",
   "private": true,
   "scripts": {
-    "syncpack:fix": "syncpack set-semver-ranges && syncpack fix-mismatches && syncpack format",
+    "syncpack:fix": "syncpack fix && syncpack format",
     "syncpack:update": "syncpack update"
   }
 }

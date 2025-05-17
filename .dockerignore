@@ -3,18 +3,18 @@
 
 # builds
 **/dist
+**/.output
 
 # envs
-**/.env
-**/.env.*
-.env
-.env.*
+**.env
+**.env.*
 
 # other folders
 .git
 .vscode
 localstack
 .turbo
+**/.turbo
 
 # other project files
 Dockerfile

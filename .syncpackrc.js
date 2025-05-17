@@ -12,7 +12,7 @@ const config = {
       strategy: "name@version",
     },
   },
-  dependencyTypes: ["dev", "peer", "prod", "engines", "packageManager"],
+  // dependencyTypes: ["dev", "peer", "prod", "engines", "packageManager"],
   versionGroups: [
     {
       label: "Use root package manager version",
@@ -24,6 +24,11 @@ const config = {
       dependencyTypes: ["engines"],
       snapTo: ["webapp"],
     },
+    // {
+    //   label: "Use prisma version supported by zenstack",
+    //   dependencies: ["prisma", "@prisma/**"],
+    //   pinVersion: "~6.7.0",
+    // },
   ],
   semverGroups: [
     {

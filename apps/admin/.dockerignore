@@ -4,3 +4,4 @@
 .nuxt
 .nitro
 .cache
+dist
