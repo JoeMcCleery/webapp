@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "generate": {
+      "dependsOn": ["^generate"],
+      "outputs": ["src/generated/**"]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

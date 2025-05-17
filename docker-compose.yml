@@ -82,6 +82,10 @@ services:
   orm:
     build:
       target: orm
+      args:
+        PACKAGE_NAME: "@webapp/orm"
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
     image: ${PROJECT_PREFIX}_orm
     container_name: ${PROJECT_PREFIX}_orm
     depends_on:
@@ -90,8 +94,8 @@ services:
       DOMAIN_APP: ${DOMAIN_APP}
       DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     volumes:
-      - ./packages/orm/src:/usr/package/src
-      - /usr/package/node_modules/
+      - ./packages/orm/src:/usr/app/src
+      - /usr/app/node_modules/
     restart: unless-stopped
     labels:
       - subdomain=orm
@@ -101,6 +105,10 @@ services:
   api:
     build:
       target: api
+      args:
+        PACKAGE_NAME: "@webapp/api"
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
     image: ${PROJECT_PREFIX}_api
     container_name: ${PROJECT_PREFIX}_api
     depends_on:
@@ -133,6 +141,10 @@ services:
   admin:
     build:
       target: admin
+      args:
+        PACKAGE_NAME: "@webapp/admin"
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
     image: ${PROJECT_PREFIX}_admin
     container_name: ${PROJECT_PREFIX}_admin
     environment:

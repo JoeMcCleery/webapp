@@ -21,7 +21,6 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --host",
-    "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview",
     "test:types": "npx nuxi typecheck"

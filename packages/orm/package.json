@@ -26,7 +26,8 @@
     "db:generate": "zenstack generate --output src/generated/zenstack",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio --port 3000 --browser none"
+    "db:studio": "prisma studio --port 3000 --browser none",
+    "generate": "pnpm db:generate"
   },
   "type": "module",
   "zenstack": {

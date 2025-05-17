@@ -4,11 +4,19 @@
 # builds
 **/dist
 
-# project files
+# envs
+**/.env
+**/.env.*
+.env
+.env.*
+
+# other folders
 .git
 .vscode
 localstack
-**/*.env
+.turbo
+
+# other project files
 Dockerfile
 docker-compose.yml
 .syncpackrc.js
