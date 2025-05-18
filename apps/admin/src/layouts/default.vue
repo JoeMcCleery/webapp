@@ -1,14 +1,7 @@
 <template>
-  <div>
-    <h1>Default Layout</h1>
-    <p>
-      Logged in user: {{ auth.user?.givenName }} {{ auth.user?.familyName }}
-      {{ auth.user?.userRoles.map((r) => r.name) }}
-    </p>
+  <div class="grid min-h-screen grid-cols-1 grid-rows-1">
     <slot />
   </div>
 </template>
 
-<script lang="ts" setup>
-const auth = useAuthStore()
-</script>
+<script lang="ts" setup></script>

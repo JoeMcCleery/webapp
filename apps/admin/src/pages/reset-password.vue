@@ -1,80 +1,9 @@
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="New Password" name="newPassword" required>
-      <InputPassword
-        v-model="state.newPassword"
-        v-model:show="showPasswords"
-        class="w-full"
-      />
-    </UFormField>
-
-    <UFormField label="Confirm Password" name="confirmPassword" required>
-      <InputPassword
-        v-model="state.confirmPassword"
-        v-model:show="showPasswords"
-        class="w-full"
-      />
-    </UFormField>
-
-    <UFormField name="persist">
-      <UCheckbox v-model="state.persist" label="Remember me" />
-    </UFormField>
-
-    <ButtonSubmit />
-  </UForm>
+  <FormResetPassword />
 </template>
 
 <script setup lang="ts">
-import type { FormSubmitEvent } from "@nuxt/ui"
-import * as z from "zod"
-
-const route = useRoute()
-const router = useRouter()
-const auth = useAuthStore()
-
-const showPasswords = ref(false)
-
-const schema = z
-  .object({
-    newPassword: z
-      .string()
-      .min(8, "Must be at least 8 characters")
-      .max(64, "Must be less than 64 characters"),
-    confirmPassword: z
-      .string()
-      .min(8, "Must be at least 8 characters")
-      .max(64, "Must be less than 64 characters"),
-    persist: z.boolean(),
-  })
-  .superRefine(({ newPassword, confirmPassword }, ctx) => {
-    if (newPassword != confirmPassword) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Passwords must match",
-        path: ["confirmPassword"],
-      })
-    }
-  })
-
-type Schema = z.output<typeof schema>
-
-const state = reactive<Partial<Schema>>({
-  newPassword: undefined,
-  confirmPassword: undefined,
-  persist: false,
+definePageMeta({
+  layout: "form",
 })
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  let { token, otpToken } = route.query
-  if (typeof token != "string") {
-    token = ""
-  }
-  if (typeof otpToken != "string") {
-    otpToken = ""
-  }
-  await catchErrorAsToast(async () => {
-    await auth.resetUserPassword({ ...event.data, token, otpToken })
-    router.push("/")
-  })
-}
 </script>
