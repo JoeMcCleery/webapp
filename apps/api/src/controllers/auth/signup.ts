@@ -1,6 +1,7 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import { generateHash, invalidateSession } from "@webapp/auth"
+import { invalidateSession } from "@webapp/auth"
+import { generateHash } from "@webapp/auth-utils"
 import { dangerousPrisma, defaultPrisma, Prisma } from "@webapp/orm"
 import type { AuthUser } from "@webapp/orm"
 

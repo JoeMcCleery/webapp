@@ -2,7 +2,7 @@ import { Decrypter, Encrypter } from "@zenstackhq/runtime/encryption"
 
 export const getEncryptionKey = () => {
   let textEncoder = new TextEncoder()
-  return textEncoder.encode(process.env.DB_ENCRYPTION_KEY ?? "")
+  return textEncoder.encode(process.env.DB_ENCRYPTION_KEY || "")
 }
 
 export const encryptValue = async (value: string) => {

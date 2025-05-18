@@ -1,7 +1,6 @@
+import { generateHash } from "@webapp/auth-utils"
 import { dangerousPrisma, getEnhancedPrisma } from "@webapp/orm"
 import type { AuthUser, Session } from "@webapp/orm"
-
-import { generateHash } from "./token-generator"
 
 const sessionDuration = 1000 * 60 * 60 * 24 * 30 // 30 days
 const sessionRefreshThreshold = 1000 * 60 * 60 * 24 * 15 // 15 days

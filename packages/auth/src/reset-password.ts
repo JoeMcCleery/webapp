@@ -1,7 +1,6 @@
+import { generateHash, generateUniqueToken } from "@webapp/auth-utils"
 import { dangerousPrisma, getEnhancedPrisma } from "@webapp/orm"
 import type { AuthUser } from "@webapp/orm"
-
-import { generateHash, generateUniqueToken } from "./token-generator"
 
 const passwordResetDuration = 1000 * 60 * 15 // 15 minutes
 

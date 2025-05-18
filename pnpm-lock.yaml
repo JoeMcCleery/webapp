@@ -81,6 +81,9 @@ importers:
       '@webapp/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@webapp/auth-utils':
+        specifier: workspace:*
+        version: link:../../packages/auth-utils
       '@webapp/orm':
         specifier: workspace:*
         version: link:../../packages/orm
@@ -114,10 +117,29 @@ importers:
       '@oslojs/encoding':
         specifier: ^1.1.0
         version: 1.1.0
+      '@webapp/auth-utils':
+        specifier: workspace:*
+        version: link:../auth-utils
     devDependencies:
       '@webapp/orm':
         specifier: workspace:*
         version: link:../orm
+      '@webapp/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  packages/auth-utils:
+    dependencies:
+      '@oslojs/crypto':
+        specifier: ^1.0.1
+        version: 1.0.1
+      '@oslojs/encoding':
+        specifier: ^1.1.0
+        version: 1.1.0
+    devDependencies:
       '@webapp/ts-config':
         specifier: workspace:*
         version: link:../ts-config
@@ -168,12 +190,18 @@ importers:
         specifier: ^2.14.2
         version: 2.14.2(@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3))
     devDependencies:
+      '@webapp/auth-utils':
+        specifier: workspace:*
+        version: link:../auth-utils
       '@webapp/ts-config':
         specifier: workspace:*
         version: link:../ts-config
       prisma:
         specifier: ~6.7.0
         version: 6.7.0(typescript@5.8.3)
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -11981,7 +12009,7 @@ snapshots:
 
   tsx@4.19.4:
     dependencies:
-      esbuild: 0.25.2
+      esbuild: 0.25.4
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3

@@ -1,11 +1,8 @@
 import { compare } from "bcryptjs"
 import type { FastifyPluginCallback } from "fastify"
 
-import {
-  generateHash,
-  invalidateSession,
-  tokenBucketConsume,
-} from "@webapp/auth"
+import { invalidateSession, tokenBucketConsume } from "@webapp/auth"
+import { generateHash } from "@webapp/auth-utils"
 import { dangerousPrisma } from "@webapp/orm"
 
 export const login: FastifyPluginCallback = function (app) {

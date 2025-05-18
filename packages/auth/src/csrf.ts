@@ -3,7 +3,7 @@ import { SHA256 } from "@oslojs/crypto/sha2"
 import { constantTimeEqual } from "@oslojs/crypto/subtle"
 import { decodeHex, encodeHexLowerCase } from "@oslojs/encoding"
 
-import { generateUniqueToken } from "./token-generator"
+import { generateUniqueToken } from "@webapp/auth-utils"
 
 export function createCSRFToken(sessionId: string) {
   const randomToken = generateUniqueToken()

@@ -2,6 +2,7 @@ import "schema/index"
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ['native', 'windows', 'linux-musl-openssl-3.0.x']
   output   = "../generated/client"
 }
 

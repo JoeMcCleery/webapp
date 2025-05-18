@@ -2,11 +2,8 @@ import type { FastifyAuthFunction } from "@fastify/auth"
 import type { FastifyReply, FastifyRequest } from "fastify"
 import fp from "fastify-plugin"
 
-import {
-  createSession,
-  generateUniqueToken,
-  validateSessionToken,
-} from "@webapp/auth"
+import { createSession, validateSessionToken } from "@webapp/auth"
+import { generateUniqueToken } from "@webapp/auth-utils"
 import type { AuthUser, Session } from "@webapp/orm"
 
 declare module "fastify" {

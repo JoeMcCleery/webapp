@@ -1,10 +1,7 @@
 import type { FastifyPluginCallback } from "fastify"
 
-import {
-  createPasswordReset,
-  generateOTPCode,
-  generateUniqueToken,
-} from "@webapp/auth"
+import { createPasswordReset } from "@webapp/auth"
+import { generateOTPCode, generateUniqueToken } from "@webapp/auth-utils"
 
 export const forgotPassword: FastifyPluginCallback = function (app) {
   app.post<{

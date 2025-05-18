@@ -8,6 +8,7 @@
     "@fastify/helmet": "^13.0.1",
     "@fastify/sensible": "^6.0.3",
     "@webapp/auth": "workspace:*",
+    "@webapp/auth-utils": "workspace:*",
     "@webapp/orm": "workspace:*",
     "@webapp/ts-config": "workspace:*",
     "@zenstackhq/server": "^2.14.2",
