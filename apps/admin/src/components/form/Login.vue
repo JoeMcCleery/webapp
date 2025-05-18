@@ -2,7 +2,7 @@
   <div class="grid w-full max-w-sm place-items-center gap-2">
     <UForm class="w-full" :schema="schema" :state="state" @submit="onSubmit">
       <FormCard title="Login">
-        <p>Enter your account email and password to login.</p>
+        <p>Enter your email and password to login.</p>
 
         <UFormField label="Email" name="email" required>
           <UInput v-model="state.email" class="w-full" />
