@@ -8,10 +8,14 @@
           <UInput v-model="state.email" class="w-full" />
         </UFormField>
 
-        <UFormField label="Password" name="password" required>
-          <InputPassword v-model="state.password" class="w-full" />
-          <ULink to="/forgot-password"> Forgotten password? </ULink>
-        </UFormField>
+        <div>
+          <UFormField label="Password" name="password" required>
+            <InputPassword v-model="state.password" class="w-full" />
+          </UFormField>
+          <ULink class="text-sm" to="/forgot-password">
+            Forgotten password?
+          </ULink>
+        </div>
 
         <UFormField name="persist">
           <UCheckbox v-model="state.persist" label="Remember me" />
