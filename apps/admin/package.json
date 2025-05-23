@@ -5,11 +5,11 @@
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.1.2",
     "@webapp/client-auth": "workspace:*",
-    "nuxt": "^3.17.3",
+    "nuxt": "^3.17.4",
     "tailwindcss": "^4.1.7",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1",
-    "zod": "^3.24.4"
+    "zod": "^3.25.23"
   },
   "devDependencies": {
     "@webapp/ts-config": "workspace:*",

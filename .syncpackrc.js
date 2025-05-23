@@ -27,7 +27,7 @@ const config = {
     {
       label: "Use prisma version supported by zenstack",
       dependencies: ["prisma", "@prisma/**"],
-      pinVersion: "~6.7.0",
+      pinVersion: "~6.8.0",
     },
   ],
   semverGroups: [

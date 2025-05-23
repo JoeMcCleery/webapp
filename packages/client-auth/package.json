@@ -2,15 +2,15 @@
   "name": "@webapp/client-auth",
   "version": "1.0.0",
   "dependencies": {
-    "@nuxt/kit": "^3.17.3",
+    "@nuxt/kit": "^3.17.4",
     "defu": "^6.1.4"
   },
   "devDependencies": {
-    "@nuxt/schema": "^3.17.3",
+    "@nuxt/schema": "^3.17.4",
     "@pinia/nuxt": "^0.11.0",
     "@webapp/orm": "workspace:*",
     "@webapp/ts-config": "workspace:*",
-    "nuxt": "^3.17.3",
+    "nuxt": "^3.17.4",
     "pinia": "^3.0.2",
     "typescript": "^5.8.3",
     "vue": "^3.5.14"
@@ -22,7 +22,7 @@
   "packageManager": "pnpm@10.11.0",
   "peerDependencies": {
     "@pinia/nuxt": "^0.11.0",
-    "nuxt": "^3.17.3",
+    "nuxt": "^3.17.4",
     "pinia": "^3.0.2",
     "vue": "^3.5.14"
   },

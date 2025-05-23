@@ -164,6 +164,7 @@ services:
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING}
     volumes:
       - ./apps/admin/src:/usr/app/apps/admin/src
+      - ./apps/admin/.nuxt:/usr/app/apps/admin/.nuxt
       - ./packages/client-auth/src:/usr/app/packages/client-auth/src
       - ./packages/orm/src:/usr/app/packages/orm/src
       - ./packages/ts-config:/usr/app/packages/ts-config

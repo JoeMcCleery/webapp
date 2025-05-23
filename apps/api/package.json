@@ -11,7 +11,7 @@
     "@webapp/auth-utils": "workspace:*",
     "@webapp/orm": "workspace:*",
     "@webapp/ts-config": "workspace:*",
-    "@zenstackhq/server": "^2.14.2",
+    "@zenstackhq/server": "^2.15.0",
     "bcryptjs": "^3.0.2",
     "fastify": "^5.3.3",
     "fastify-plugin": "^5.0.1",
