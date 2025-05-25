@@ -10,3 +10,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URI")
 }
+
+plugin trpc {
+  provider = '@zenstackhq/trpc'
+  output = './generated/trpc'
+  version = 'v11'
+  importCreateRouter = "../../../trpc"
+  importProcedure = "../../../trpc"
+  zodSchemasImport = "../../zenstack/zod"
+}

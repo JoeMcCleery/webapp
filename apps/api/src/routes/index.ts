@@ -1,7 +1,7 @@
 import type { FastifyPluginCallback } from "fastify"
 
 import { auth } from "./auth"
-import { rpc } from "./rpc"
+import { trpc } from "./trpc"
 
 export const routes: FastifyPluginCallback = function (app) {
   app.addHook(
@@ -15,6 +15,6 @@ export const routes: FastifyPluginCallback = function (app) {
   )
   app.addHook("onResponse", app.auth([app.throttlerReset]))
 
-  app.register(rpc, { prefix: "/rpc" })
+  app.register(trpc, { prefix: "/trpc" })
   app.register(auth, { prefix: "/auth" })
 }
