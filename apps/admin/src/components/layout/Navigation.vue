@@ -3,7 +3,7 @@
     <UButton icon="i-lucide-menu" size="xl" variant="ghost" />
 
     <template #body>
-      <Placeholder class="h-full" />
+      <USkeleton class="h-full" />
     </template>
   </USlideover>
 </template>
