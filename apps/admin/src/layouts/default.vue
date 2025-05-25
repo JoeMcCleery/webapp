@@ -1,5 +1,7 @@
 <template>
-  <div class="grid min-h-screen grid-cols-1 grid-rows-1">
+  <div class="grid min-h-screen grid-cols-1 grid-rows-[auto_1fr]">
+    <LayoutHeader />
+
     <slot />
   </div>
 </template>

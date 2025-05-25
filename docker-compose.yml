@@ -165,6 +165,7 @@ services:
     volumes:
       - ./apps/admin/src:/usr/app/apps/admin/src
       - ./apps/admin/.nuxt:/usr/app/apps/admin/.nuxt
+      - ./apps/admin/nuxt.config.ts:/usr/app/apps/admin/nuxt.config.ts
       - ./packages/client-auth/src:/usr/app/packages/client-auth/src
       - ./packages/orm/src:/usr/app/packages/orm/src
       - ./packages/ts-config:/usr/app/packages/ts-config

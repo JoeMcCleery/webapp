@@ -1,5 +1,6 @@
 <template>
   <UButton
+    v-if="auth.user"
     trailing-icon="i-lucide-log-out"
     @click="all ? auth.logoutAll() : auth.logout()"
   >
