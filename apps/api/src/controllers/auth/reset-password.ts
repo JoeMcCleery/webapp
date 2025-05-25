@@ -1,8 +1,8 @@
 import type { FastifyPluginCallback } from "fastify"
 
 import {
+  invalidateAllSessions,
   invalidatePasswordReset,
-  invalidateSession,
   tokenBucketConsume,
   validatePasswordReset,
 } from "@webapp/auth"
@@ -34,7 +34,7 @@ export const resetPassword: FastifyPluginCallback = function (app) {
     }
     // Verify new password
     if (newPassword !== confirmPassword) {
-      console.log("Resetting password faild, passwords did not match")
+      console.log("Resetting password failed, passwords did not match")
       return rep.unprocessableEntity("Passwords did not match")
     }
     // Safely set new user password
@@ -45,10 +45,8 @@ export const resetPassword: FastifyPluginCallback = function (app) {
     })
     // Invalidate password reset
     await invalidatePasswordReset(user)
-    // Invalidate existing session
-    if (req.user && req.session) {
-      await invalidateSession(req.user, req.session.id)
-    }
+    // Invalidate all user sessions
+    await invalidateAllSessions(user)
     // Create new user session
     const csrfToken = await rep.createUserSession(user, persist)
     // Success
