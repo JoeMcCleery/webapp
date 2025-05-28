@@ -4,6 +4,7 @@
     "@nuxt/fonts": "^0.11.4",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.1.2",
+    "@trpc/client": "^11.1.2",
     "@webapp/client-auth": "workspace:*",
     "nuxt": "^3.17.4",
     "tailwindcss": "^4.1.7",
@@ -12,6 +13,7 @@
     "zod": "^3.25.23"
   },
   "devDependencies": {
+    "@trpc/server": "^11.1.2",
     "@webapp/ts-config": "workspace:*",
     "typescript": "^5.8.3",
     "vue-tsc": "^2.2.10"
