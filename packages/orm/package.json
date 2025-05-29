@@ -6,7 +6,7 @@
     "@zenstackhq/runtime": "^2.15.0"
   },
   "devDependencies": {
-    "@trpc/server": "^11.1.2",
+    "@trpc/server": "^11.1.4",
     "@webapp/auth-utils": "workspace:*",
     "@webapp/ts-config": "workspace:*",
     "@zenstackhq/trpc": "^2.15.0",
@@ -14,7 +14,7 @@
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "zenstack": "^2.15.0",
-    "zod": "^3.25.23"
+    "zod": "^3.25.36"
   },
   "files": [
     "src"
