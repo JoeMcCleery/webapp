@@ -83,9 +83,6 @@ export default defineNuxtModule<ModuleOptions>({
     // Auto import module stores
     addImportsDir(resolver.resolve("./runtime/stores"))
 
-    // Auto import module utils
-    addImportsDir(resolver.resolve("./runtime/utils"))
-
     // Add trpc client plugin
     addPlugin(resolver.resolve("./runtime/plugins/trpc"))
 

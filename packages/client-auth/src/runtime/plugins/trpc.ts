@@ -4,7 +4,7 @@ import { defineNuxtPlugin } from "nuxt/app"
 
 import type { AppRouter } from "@webapp/orm"
 
-import authFetch from "../utils/authFetch"
+import authFetch from "../composables/authFetch"
 
 export default defineNuxtPlugin({
   name: "trpc",
@@ -18,6 +18,7 @@ export default defineNuxtPlugin({
               authFetch(`/trpc${url}`, {
                 ...options,
                 method: options?.method as NitroFetchOptions<string>["method"],
+                ignoreResponseError: true,
               }),
             )
           },
