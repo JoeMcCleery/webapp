@@ -1,7 +1,9 @@
 <template>
   <UContainer class="p-4 md:p-8">
     <h1>Welcome!</h1>
-    {{ users }}
+    <div v-for="user in users">
+      {{ user }}
+    </div>
   </UContainer>
 </template>
 
