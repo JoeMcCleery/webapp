@@ -1,16 +1,15 @@
 import defu from "defu"
 import { FetchError } from "ofetch"
 
-import { AuthFetchError } from "@webapp/client-auth/src/error"
-
 export const catchErrorAsToast = async <T>(
   promise: () => Promise<T>,
   opts: Partial<Toast> = {},
 ) => {
+  const nuxtApp = useNuxtApp()
   try {
-    return await promise()
+    return await nuxtApp.runWithContext(() => promise())
   } catch (error) {
-    handleErrorAsToast(error, opts)
+    nuxtApp.runWithContext(() => handleErrorAsToast(error, opts))
   }
 }
 
@@ -24,14 +23,6 @@ export const handleErrorAsToast = (
       defu(opts, {
         title: `${error.data.statusCode}: ${error.data.error}`,
         description: error.data?.message ?? error.message,
-        color: "error",
-      } as Partial<Toast>),
-    )
-  } else if (error instanceof AuthFetchError) {
-    toast.add(
-      defu(opts, {
-        title: `${error.statusCode}: ${error.error}`,
-        description: error.message,
         color: "error",
       } as Partial<Toast>),
     )

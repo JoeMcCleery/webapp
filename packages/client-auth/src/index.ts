@@ -1,5 +1,6 @@
 import {
   addImportsDir,
+  addPlugin,
   addRouteMiddleware,
   createResolver,
   defineNuxtModule,
@@ -84,6 +85,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Auto import module utils
     addImportsDir(resolver.resolve("./runtime/utils"))
+
+    // Add trpc client plugin
+    addPlugin(resolver.resolve("./runtime/plugins/trpc"))
 
     // Add auth middleware
     addRouteMiddleware(

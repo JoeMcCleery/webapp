@@ -168,6 +168,9 @@ importers:
       '@pinia/nuxt':
         specifier: ^0.11.0
         version: 0.11.0(magicast@0.3.5)(pinia@3.0.2(typescript@5.8.3)(vue@3.5.14(typescript@5.8.3)))
+      '@trpc/client':
+        specifier: ^11.1.2
+        version: 11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3)
       '@webapp/orm':
         specifier: workspace:*
         version: link:../orm
