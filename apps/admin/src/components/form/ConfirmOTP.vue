@@ -6,7 +6,7 @@
     @submit="onSubmit"
   >
     <FormCard title="Confirm OTP">
-      <p>Enter the password reset code you recieved in your email inbox.</p>
+      <p>Enter the 6 character code you recieved in your email inbox.</p>
 
       <UFormField
         class="grid w-full place-items-center"

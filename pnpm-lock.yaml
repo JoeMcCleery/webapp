@@ -57,6 +57,9 @@ importers:
       '@trpc/server':
         specifier: ^11.1.4
         version: 11.1.4(typescript@5.8.3)
+      '@webapp/orm':
+        specifier: workspace:*
+        version: link:../../packages/orm
       '@webapp/ts-config':
         specifier: workspace:*
         version: link:../../packages/ts-config
