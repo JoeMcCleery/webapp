@@ -1,11 +1,14 @@
 <template>
-  <UButton
-    :icon="isDarkMode ? 'i-lucide-moon' : 'i-lucide-sun'"
-    size="xl"
-    color="neutral"
-    variant="ghost"
-    @click="toggleColourMode"
-  />
+  <ClientOnly>
+    <UButton
+      v-if="!colourMode.unknown && !colourMode.forced"
+      :icon="isDarkMode ? 'i-lucide-moon' : 'i-lucide-sun'"
+      size="xl"
+      color="neutral"
+      variant="ghost"
+      @click="toggleColourMode"
+    />
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
