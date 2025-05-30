@@ -1,9 +1,5 @@
 <template>
-  <FormLogin />
+  <LayoutCentered>
+    <FormLogin />
+  </LayoutCentered>
 </template>
-
-<script setup lang="ts">
-definePageMeta({
-  layout: "form",
-})
-</script>

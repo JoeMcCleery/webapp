@@ -12,6 +12,7 @@
           <ButtonSubmit
             size="xl"
             class="flex w-full items-center justify-center"
+            :loading="loading"
           />
         </template>
       </FormCard>
@@ -28,6 +29,12 @@ import * as z from "zod"
 const router = useRouter()
 const auth = useAuthStore()
 
+if (auth.user) {
+  await navigateTo("/")
+}
+
+const loading = ref(false)
+
 const schema = z.object({
   email: z.string().email("Invalid email"),
 })
@@ -39,6 +46,7 @@ const state = reactive<Partial<Schema>>({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  loading.value = true
   await catchErrorAsToast(async () => {
     const token = await auth.forgotPassword(event.data)
     router.push({
@@ -48,5 +56,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       },
     })
   })
+  loading.value = false
 }
 </script>

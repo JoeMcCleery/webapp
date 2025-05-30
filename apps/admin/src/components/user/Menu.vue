@@ -5,10 +5,15 @@
     </div>
 
     <template #title>
-      <div class="flex items-center gap-1.5">
-        <UserAvatar size="sm" />
-        {{ fullName(auth.user) }}
-      </div>
+      <span class="flex items-center gap-2">
+        <UserAvatar size="2xl" />
+        <div class="flex flex-col justify-center">
+          {{ fullName(auth.user) }}
+          <div class="text-muted text-sm font-normal">
+            {{ auth.user.email }}
+          </div>
+        </div>
+      </span>
     </template>
 
     <template #body>
@@ -38,7 +43,10 @@ const items = ref<NavigationMenuItem[][]>([
     {
       label: "Logout",
       icon: "i-lucide-log-out",
-      onSelect: auth.logout,
+      onSelect: () => {
+        closeMenu()
+        auth.logout()
+      },
     },
   ],
 ])

@@ -9,7 +9,7 @@
       <div class="w-full"></div>
 
       <ButtonColourMode />
-      <MenuProfile />
+      <UserMenu />
     </UContainer>
   </header>
 </template>

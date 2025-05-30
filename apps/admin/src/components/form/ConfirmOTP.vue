@@ -1,35 +1,40 @@
 <template>
-  <UForm
-    class="w-full max-w-sm"
-    :schema="schema"
-    :state="state"
-    @submit="onSubmit"
-  >
-    <FormCard title="Confirm OTP">
-      <p>Enter the 6 character code you recieved in your email inbox.</p>
+  <div class="grid w-full max-w-sm place-items-center gap-2">
+    <UForm
+      class="w-full max-w-sm"
+      :schema="schema"
+      :state="state"
+      @submit="onSubmit"
+    >
+      <FormCard title="Confirm OTP">
+        <p>Enter the 6 character code you recieved in your email inbox.</p>
 
-      <UFormField
-        class="grid w-full place-items-center"
-        name="otpCode"
-        required
-      >
-        <UPinInput
-          v-model="state.otpCode"
-          length="6"
-          size="xl"
-          otp
-          @update:modelValue="toUpperCase"
-        />
-      </UFormField>
+        <UFormField
+          class="grid w-full place-items-center"
+          name="otpCode"
+          required
+        >
+          <UPinInput
+            v-model="state.otpCode"
+            length="6"
+            size="xl"
+            otp
+            @update:modelValue="toUpperCase"
+          />
+        </UFormField>
 
-      <template #actions>
-        <ButtonSubmit
-          size="xl"
-          class="flex w-full items-center justify-center"
-        />
-      </template>
-    </FormCard>
-  </UForm>
+        <template #actions>
+          <ButtonSubmit
+            size="xl"
+            class="flex w-full items-center justify-center"
+            :loading="loading"
+          />
+        </template>
+      </FormCard>
+    </UForm>
+
+    <ULink to="/login"> Remember password? Login </ULink>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +44,12 @@ import * as z from "zod"
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+
+if (auth.user) {
+  await navigateTo("/")
+}
+
+const loading = ref(false)
 
 const schema = z.object({
   otpCode: z.string().array().length(6, "Must be 6 characters"),
@@ -57,6 +68,7 @@ const toUpperCase = (value?: string[]) => {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  loading.value = true
   let { token } = route.query
   if (typeof token != "string") {
     token = ""
@@ -74,5 +86,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       },
     })
   })
+  loading.value = false
 }
 </script>

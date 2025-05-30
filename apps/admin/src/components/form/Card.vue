@@ -1,5 +1,5 @@
 <template>
-  <UCard>
+  <UCard variant="subtle">
     <template v-if="title" #header>
       <div class="flex min-h-8 items-center justify-center text-2xl">
         {{ title }}
