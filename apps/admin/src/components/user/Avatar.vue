@@ -1,6 +1,5 @@
 <template>
   <UAvatar
-    size="lg"
     :alt="fullName"
     icon="i-lucide-user-round"
     :ui="{ root: 'bg-accented' }"

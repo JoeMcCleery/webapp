@@ -1,6 +1,6 @@
 <template>
-  <header class="bg-muted">
-    <UContainer class="flex items-center gap-4 p-4 md:p-8">
+  <header class="bg-muted sticky top-0">
+    <UContainer class="flex items-center gap-2 p-4 sm:px-6">
       <ButtonHome />
       <LayoutNavigation />
 

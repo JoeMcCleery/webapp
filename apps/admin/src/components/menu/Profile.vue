@@ -1,12 +1,12 @@
 <template>
   <USlideover v-if="auth.user" v-model:open="open">
     <div class="cursor-pointer rounded-full">
-      <UserAvatar />
+      <UserAvatar size="xl" />
     </div>
 
     <template #title>
-      <div class="flex items-center gap-2">
-        <UserAvatar />
+      <div class="flex items-center gap-1.5">
+        <UserAvatar size="sm" />
         {{ fullName(auth.user) }}
       </div>
     </template>

@@ -1,5 +1,5 @@
 <template>
-  <UContainer class="p-4 md:p-8">
+  <UContainer class="p-4 sm:p-6">
     <h1>Welcome!</h1>
     <div v-for="user in users">
       {{ user }}
