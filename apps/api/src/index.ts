@@ -2,6 +2,7 @@ import fastifyAuth from "@fastify/auth"
 import fastifyCookie from "@fastify/cookie"
 import cors from "@fastify/cors"
 import fastifyHelmet from "@fastify/helmet"
+import fastifyMultipart from "@fastify/multipart"
 import fastifySensible from "@fastify/sensible"
 import Fastify from "fastify"
 
@@ -34,6 +35,7 @@ const init = async function () {
   })
   app.register(fastifyAuth, { defaultRelation: "and" })
   app.register(fastifySensible)
+  app.register(fastifyMultipart)
 
   // Register middleware
   app.register(middleware)

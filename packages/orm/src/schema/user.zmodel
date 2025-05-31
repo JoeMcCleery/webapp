@@ -1,24 +1,26 @@
-import 'abstract/base'
+import 'base'
 import 'access-control'
+import 'asset'
 
 model User extends Base {
-  givenName            String                @encrypted @length(min: 1)
-  familyName           String?               @encrypted
-  email                String                @email @encrypted @unique
-  emailHash            String                @unique @omit
-  password             String                @password @omit @length(min: 8, max: 64)
+  givenName        String            @encrypted @length(min: 1)
+  familyName       String?           @encrypted
+  email            String            @email @encrypted @unique
+  emailHash        String            @unique @omit
+  password         String            @password @omit @length(min: 8, max: 64)
 
-  sessions             Session[]
-  passwordReset        PasswordReset?
-  userRoles            UserRole[]
-  userModelPermissions UserModelPermission[]
+  sessions         Session[]
+  passwordReset    PasswordReset?
+  userRoles        UserRole[]
+  modelPermissions ModelPermission[]
+  uploadedAssets   Asset[]
+  imageId          String?           @db.Uuid @unique
+  image            Image?            @relation(fields: [imageId], references: [id], onDelete: Cascade) 
 
   // full access by self
   @@allow('all', auth() == this)
-
   // anyone can create users
   @@allow('create', true)
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
@@ -29,14 +31,14 @@ model User extends Base {
 model Session extends Base {
   tokenHash String   @unique @omit
   expiresAt DateTime
-  persist   Boolean  @deny('update', true) // cannot change persist after creation
-  userId    String   @db.Uuid @default(auth().id)
+  // cannot change persist after creation
+  persist   Boolean  @deny('update', true)
 
+  userId    String   @db.Uuid @default(auth().id)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // users manage own sessions
   @@allow('all', auth() == user)
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])
@@ -49,13 +51,12 @@ model PasswordReset extends Base {
   otpTokenHash String?  @omit
   tokenHash    String   @unique @omit
   expiresAt    DateTime
-  userId       String   @db.Uuid @unique @default(auth().id)
 
+  userId       String   @db.Uuid @unique @default(auth().id)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // users manage own password resets
   @@allow('all', auth() == user)
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'users']) && has(operations, 'read')]])

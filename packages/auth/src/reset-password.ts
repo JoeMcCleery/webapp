@@ -21,7 +21,7 @@ export async function createPasswordReset(
     },
     include: {
       userRoles: { include: { permissions: true } },
-      userModelPermissions: true,
+      modelPermissions: true,
     },
   })
   // If no user found return null
@@ -58,7 +58,7 @@ export async function confirmOTPCode(otpCode: string, token: string) {
       user: {
         include: {
           userRoles: { include: { permissions: true } },
-          userModelPermissions: true,
+          modelPermissions: true,
         },
       },
     },
@@ -103,7 +103,7 @@ export async function validatePasswordReset(token: string, otpToken: string) {
       user: {
         include: {
           userRoles: { include: { permissions: true } },
-          userModelPermissions: true,
+          modelPermissions: true,
         },
       },
     },

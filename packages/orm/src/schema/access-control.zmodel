@@ -1,4 +1,4 @@
-import 'abstract/base'
+import 'base'
 import 'user'
 
 enum Operation {
@@ -12,17 +12,17 @@ enum AccessArea {
   all
   users
   permissions
+  assets
 }
 
 model UserRole extends Base {
-  name        String       @length(min: 1) @unique
+  name        String               @length(min: 1) @unique
 
   users       User[]
-  permissions Permission[]
+  permissions UserRolePermission[]
 
   // users can read their own roles
   @@allow('read', users?[id == auth().id])
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])
@@ -30,16 +30,15 @@ model UserRole extends Base {
   @@allow('delete', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'delete')]])
 }
 
-model Permission extends Base {
+model UserRolePermission extends Base {
   operations  Operation[]
   accessAreas AccessArea[]
-  userRoleId  String       @db.Uuid
 
+  userRoleId  String       @db.Uuid
   userRole    UserRole     @relation(fields: [userRoleId], references: [id], onDelete: Cascade)
 
   // users can read their own role permissions
   @@allow('read', check(userRole, 'read'))
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])
@@ -48,29 +47,28 @@ model Permission extends Base {
 }
 
 model ModelWithPermissions extends Base {
-  userModelPermissions UserModelPermission[]
-  modelType            String
+  permissions ModelPermission[]
 
+  modelType   String
   @@delegate(modelType)
 
   // model based permissions
-  @@allow('create', auth().userModelPermissions?[modelId == id && has(operations, 'create')])
-  @@allow('read', auth().userModelPermissions?[modelId == id && has(operations, 'read')])
-  @@allow('update', auth().userModelPermissions?[modelId == id && has(operations, 'update')])
-  @@allow('delete', auth().userModelPermissions?[modelId == id && has(operations, 'delete')])
+  @@allow('create', auth().modelPermissions?[modelId == id && has(operations, 'create')])
+  @@allow('read', auth().modelPermissions?[modelId == id && has(operations, 'read')])
+  @@allow('update', auth().modelPermissions?[modelId == id && has(operations, 'update')])
+  @@allow('delete', auth().modelPermissions?[modelId == id && has(operations, 'delete')])
 }
 
-model UserModelPermission extends Base {
+model ModelPermission extends Base {
   operations Operation[]
-  modelId    String               @db.Uuid
-  userId     String               @db.Uuid
 
+  modelId    String               @db.Uuid
   model      ModelWithPermissions @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  userId     String               @db.Uuid
   user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // users can read their own model permissions
   @@allow('read', auth() == user)
-
   // role based permissions
   @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'create')]])
   @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'permissions']) && has(operations, 'read')]])

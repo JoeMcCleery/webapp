@@ -56,7 +56,7 @@ async function main() {
           },
           include: {
             userRoles: { include: { permissions: true } },
-            userModelPermissions: true,
+            modelPermissions: true,
           },
         })
         console.log("Created default admin user:", adminUser)

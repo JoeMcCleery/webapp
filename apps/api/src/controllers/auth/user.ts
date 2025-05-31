@@ -12,7 +12,8 @@ export const user: FastifyPluginCallback = function (app) {
         where: { id: req.user.id },
         include: {
           userRoles: { include: { permissions: true } },
-          userModelPermissions: true,
+          modelPermissions: true,
+          image: true,
         },
       })
       // Send user object back to client

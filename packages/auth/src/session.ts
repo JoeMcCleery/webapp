@@ -39,7 +39,7 @@ export async function validateSessionToken(token: string) {
       user: {
         include: {
           userRoles: { include: { permissions: true } },
-          userModelPermissions: true,
+          modelPermissions: true,
         },
       },
     },

@@ -47,7 +47,7 @@ export const signup: FastifyPluginCallback = function (app) {
             },
             include: {
               userRoles: { include: { permissions: true } },
-              userModelPermissions: true,
+              modelPermissions: true,
             },
           })
         }

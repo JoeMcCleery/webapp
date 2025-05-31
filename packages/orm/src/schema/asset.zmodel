@@ -1,0 +1,42 @@
+import 'base'
+import 'access-control'
+import 'user'
+
+model Asset extends ModelWithPermissions {
+  filename     String   @unique
+  mimetype     String
+  url          String   @unique
+  public       Boolean  @default(false)
+  urlExpiresAt DateTime
+
+  uploadedById String   @db.Uuid @default(auth().id)
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  assetType    String
+  @@delegate(assetType)
+
+  // allow read for public assets
+  @@allow('read', public == true)
+  // users manage own uploaded assets
+  @@allow('all', auth() == uploadedBy)
+  // role based permissions
+  @@allow('create', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'assets']) && has(operations, 'create')]])
+  @@allow('read', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'assets']) && has(operations, 'read')]])
+  @@allow('update', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'assets']) && has(operations, 'update')]])
+  @@allow('delete', auth().userRoles?[permissions?[hasSome(accessAreas, ['all', 'assets']) && has(operations, 'delete')]])
+}
+
+model Image extends Asset {
+  alt    String?
+  title  String?
+  width  Int
+  height Int
+
+  // user profile images
+  users  User[]
+
+  // logged in users can create images
+  @@allow('create', auth() != null)
+  // can read user images if allowed to read user TODO temp fix allow users to read own images
+  @@allow('read', users?[id == auth().id])
+}
