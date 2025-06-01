@@ -33,7 +33,6 @@
           <ButtonSubmit
             size="xl"
             class="flex w-full items-center justify-center"
-            :loading="loading"
           />
         </template>
       </FormCard>
@@ -55,7 +54,6 @@ if (auth.user) {
   await navigateTo("/")
 }
 
-const loading = ref(false)
 const showPasswords = ref(false)
 
 const schema = z
@@ -89,7 +87,6 @@ const state = reactive<Partial<Schema>>({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  loading.value = true
   let { token, otpToken } = route.query
   if (typeof token != "string") {
     token = ""
@@ -101,6 +98,5 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await auth.resetUserPassword({ ...event.data, token, otpToken })
     router.push("/")
   })
-  loading.value = false
 }
 </script>

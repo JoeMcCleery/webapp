@@ -27,7 +27,6 @@
           <ButtonSubmit
             size="xl"
             class="flex w-full items-center justify-center"
-            :loading="loading"
           />
         </template>
       </FormCard>
@@ -49,8 +48,6 @@ if (auth.user) {
   await navigateTo("/")
 }
 
-const loading = ref(false)
-
 const schema = z.object({
   otpCode: z.string().array().length(6, "Must be 6 characters"),
 })
@@ -68,7 +65,6 @@ const toUpperCase = (value?: string[]) => {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  loading.value = true
   let { token } = route.query
   if (typeof token != "string") {
     token = ""
@@ -86,6 +82,5 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       },
     })
   })
-  loading.value = false
 }
 </script>

@@ -27,7 +27,6 @@
             icon="i-lucide-log-in"
             size="xl"
             class="flex w-full items-center justify-center"
-            :loading="loading"
           />
         </template>
       </FormCard>
@@ -48,8 +47,6 @@ if (auth.user) {
   await navigateTo("/")
 }
 
-const loading = ref(false)
-
 const schema = z.object({
   email: z.string().email("Invalid email"),
   password: z
@@ -68,11 +65,9 @@ const state = reactive<Partial<Schema>>({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  loading.value = true
   await catchErrorAsToast(async () => {
     await auth.login(event.data)
     router.push("/")
   })
-  loading.value = false
 }
 </script>

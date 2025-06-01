@@ -1,5 +1,5 @@
 <template>
-  <UButton :trailing-icon="icon" type="submit">{{ text }}</UButton>
+  <UButton type="submit" :trailing-icon="icon" loading-auto>{{ text }}</UButton>
 </template>
 
 <script setup lang="ts">

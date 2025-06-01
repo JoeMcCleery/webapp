@@ -30,7 +30,6 @@
             icon="i-lucide-user-round-plus"
             size="xl"
             class="flex w-full items-center justify-center"
-            :loading="loading"
           />
         </template>
       </FormCard>
@@ -50,8 +49,6 @@ const auth = useAuthStore()
 if (auth.user) {
   await navigateTo("/")
 }
-
-const loading = ref(false)
 
 const schema = z.object({
   givenName: z.string().min(1, "Name is required"),
@@ -75,11 +72,9 @@ const state = reactive<Partial<Schema>>({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  loading.value = true
   await catchErrorAsToast(async () => {
     await auth.signup(event.data)
     router.push("/")
   })
-  loading.value = false
 }
 </script>
