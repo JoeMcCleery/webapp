@@ -35,7 +35,11 @@ const init = async function () {
   })
   app.register(fastifyAuth, { defaultRelation: "and" })
   app.register(fastifySensible)
-  app.register(fastifyMultipart)
+  app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 5000000,
+    },
+  })
 
   // Register middleware
   app.register(middleware)

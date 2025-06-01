@@ -46,6 +46,7 @@ services:
     environment:
       SERVICES: s3
       S3_BUCKET: ${S3_BUCKET}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
     volumes:
       - ./localstack/persist:/persisted-data
       - ./localstack/init:/etc/localstack/init/ready.d
@@ -126,8 +127,9 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_HOST: ${SMTP_HOST}
-      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_REGION: ${AWS_DEFAULT_REGION}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       S3_BUCKET: ${S3_BUCKET}
@@ -139,6 +141,7 @@ services:
       - ./apps/api/src:/usr/app/apps/api/src
       - ./packages/auth/src:/usr/app/packages/auth/src
       - ./packages/auth-utils/src:/usr/app/packages/auth-utils/src
+      - ./packages/aws/src:/usr/app/packages/aws/src
       - ./packages/orm/src:/usr/app/packages/orm/src
       - ./packages/ts-config:/usr/app/packages/ts-config
     restart: unless-stopped

@@ -1,25 +1,27 @@
 <template>
   <div class="grid gap-1">
     <div class="flex gap-0.5">
-      <UButton as="label" :for="id" :icon="icon" class="cursor-pointer">
-        {{ multiple ? "Select Files" : "Select File" }}
+      <UButton class="cursor-pointer" :icon="icon" @click="openInput()">
+        {{ label || (multiple ? "Select Files" : "Select File") }}
       </UButton>
       <UInput
+        ref="inputRef"
         v-model="inputValue"
-        class="hidden"
         type="file"
         :id="id"
+        :name="id"
         :accept="accept"
         :multiple="multiple"
         :capture="capture"
-        @change="addFiles"
+        hidden
+        @change="addFiles($event)"
       />
 
       <UButton
         v-if="files.length > 0"
         icon="i-lucide-x"
         variant="ghost"
-        @click="clear"
+        @click="clear()"
       />
     </div>
 
@@ -47,10 +49,13 @@ const files = defineModel({
   default: () => [],
 })
 
+const emit = defineEmits<{
+  change: [files: File[]]
+}>()
+
 const props = defineProps({
   id: {
     type: String,
-    default: "upload",
   },
   icon: {
     type: String,
@@ -66,28 +71,60 @@ const props = defineProps({
   capture: {
     type: String as PropType<"user" | "environment">,
   },
+  label: {
+    type: String,
+  },
 })
 
-const inputValue = ref("")
+const { id, emitFormBlur, emitFormInput, emitFormChange } = useFormField(props)
+
+const inputRef = useTemplateRef("inputRef")
+const inputValue = ref<string>()
+
+watch(
+  files,
+  (val) => {
+    if (val.length == 0) {
+      inputValue.value = ""
+    }
+    if (inputRef.value?.inputRef) {
+      let list = new DataTransfer()
+      val.forEach((f) => list.items.add(f))
+      inputRef.value.inputRef.files = list.files
+    }
+    emit("change", val)
+    emitFormBlur()
+    emitFormInput()
+    emitFormChange()
+  },
+  {
+    deep: true,
+  },
+)
+
+const openInput = () => {
+  inputRef.value?.inputRef?.click()
+}
 
 const addFiles = (e: Event) => {
   const input = e.target as HTMLInputElement
   const newFiles = Array.from(input.files ?? [])
   if (props.multiple) {
-    // TODO update input's value
-    files.value = files.value.concat(newFiles)
+    files.value = uniqueBy(newFiles.concat(files.value), (f) => f.name)
   } else {
     files.value = newFiles
   }
 }
 
 const clear = () => {
-  inputValue.value = ""
   files.value = []
 }
 
 const removeFile = (index: number) => {
-  // TODO update input's value
   files.value = files.value.toSpliced(index, 1)
 }
+
+defineExpose({
+  inputRef: inputRef.value?.inputRef,
+})
 </script>

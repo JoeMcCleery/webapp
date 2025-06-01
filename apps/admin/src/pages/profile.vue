@@ -9,6 +9,8 @@
       </tbody>
     </table>
 
+    <FormProfileImage />
+
     <div class="flex flex-col items-start gap-2">
       <ButtonPasswordReset />
       <ButtonLogout />

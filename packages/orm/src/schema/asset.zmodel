@@ -3,7 +3,7 @@ import 'access-control'
 import 'user'
 
 model Asset extends ModelWithPermissions {
-  filename     String   @unique
+  filename     String
   mimetype     String
   url          String   @unique
   public       Boolean  @default(false)

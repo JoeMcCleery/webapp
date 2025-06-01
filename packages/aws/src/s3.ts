@@ -7,7 +7,15 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import type { StreamingBlobPayloadInputTypes } from "@smithy/types"
 
-const client = new S3Client() // Use config and credentials from env vars
+const client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
+  },
+  endpoint: process.env.AWS_ENDPOINT_URL,
+  forcePathStyle: true,
+})
 
 const bucketName = process.env.S3_BUCKET
 
@@ -21,7 +29,6 @@ export const uploadObject = async (
     Body: body,
   })
   const response = await client.send(command)
-  console.log(response)
   return response
 }
 
@@ -43,6 +50,5 @@ export const deleteObject = async (key: string) => {
     Key: key,
   })
   const response = await client.send(command)
-  console.log(response)
   return response
 }

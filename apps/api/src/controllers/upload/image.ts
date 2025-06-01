@@ -16,13 +16,13 @@ export const image: FastifyPluginCallback = async function (app) {
       return rep.unprocessableEntity("Missing file from request")
     }
     // Get required properties from multipart file
-    const { filename, mimetype, file } = data
-    const key = `/images/${filename}`
+    const { filename, mimetype } = data
+    const key = `images/${filename}`
+    const buffer = await data.toBuffer()
     // Upload file to s3
-    await uploadObject(key, file)
+    await uploadObject(key, buffer)
     // Create image record
     const { url, expiresAt: urlExpiresAt } = await getObjectUrl(key)
-    const buffer = await data.toBuffer()
     const { width, height } = imageSize(buffer)
     const prisma = getEnhancedPrisma({ user: req.user })
     const image = await prisma.image.create({

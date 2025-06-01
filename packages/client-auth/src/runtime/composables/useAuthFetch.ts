@@ -12,5 +12,5 @@ export default async function useAuthFetch<T>(
   // Fetch
   const res = await nuxtApp.runWithContext(() => authFetch<T>(request, opts))
   // Return result data
-  return res._data
+  return res._data as T
 }
