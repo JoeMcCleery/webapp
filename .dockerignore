@@ -15,6 +15,7 @@
 localstack
 .turbo
 **/.turbo
+email
 
 # other project files
 Dockerfile

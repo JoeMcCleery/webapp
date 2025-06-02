@@ -13,8 +13,7 @@ const client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test",
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
   },
-  endpoint: process.env.AWS_ENDPOINT_URL,
-  forcePathStyle: true,
+  endpoint: process.env.AWS_S3_ENDPOINT_URL,
 })
 
 const bucketName = process.env.S3_BUCKET

@@ -5,6 +5,7 @@ services:
     command:
       - --api.insecure=false
       - --providers.docker=true
+      - --providers.docker.network=ls
       - --providers.docker.defaultRule=Host(`{{ index .Labels "subdomain" }}.${DOMAIN_APP}`)
       - --providers.docker.constraints=LabelRegex(`subdomain`, `\S`)
       - --entrypoints.web.address=:80
@@ -14,13 +15,18 @@ services:
       - --certificatesresolvers.le.acme.email=support@fearindigo.com.au
       - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
-    ports:
-      - 80:80
-      - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
     restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
       - subdomain=traefik
       - traefik.http.routers.traefik.tls=true
@@ -38,6 +44,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
 
   # Local dev only
   localstack:
@@ -47,32 +58,46 @@ services:
       SERVICES: s3
       S3_BUCKET: ${S3_BUCKET}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      LOCALSTACK_HOST: localhost.localstack.cloud:443
+      GATEWAY_LISTEN: 0.0.0.0:443
     volumes:
       - ./localstack/persist:/persisted-data
       - ./localstack/init:/etc/localstack/init/ready.d
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./localstack/data:/var/lib/localstack
     restart: unless-stopped
+    hostname: localhost.localstack.cloud
+    networks:
+      ls:
+        ipv4_address: 10.0.2.20
     labels:
       - subdomain=localstack
+      - traefik.enable=true
       - traefik.http.routers.localstack.tls=true
+      - traefik.http.routers.localstack.rule=Host(`localhost.localstack.cloud`) || HostRegexp(`^.+\.localhost\.localstack\.cloud$`)
       # - traefik.http.routers.localstack.tls.certresolver=le
+      - traefik.http.services.localstack-webapp.loadbalancer.server.port=443
 
   # Local dev only
   email:
     image: rnwood/smtp4dev
     container_name: ${PROJECT_PREFIX}_email
     environment:
-      ServerOptions__HostName: email
+      ServerOptions__HostName: email.${DOMAIN_APP}
       ServerOptions__TlsMode: StartTls
       ServerOptions__Port: ${SMTP_PORT}
       ServerOptions__Users__0__Username: ${SMTP_USER}
       ServerOptions__Users__0__Password: ${SMTP_PASS}
       ServerOptions__Users__0__DefaultMailbox: Default
-    ports:
-      - 1234:80
     volumes:
-      - email_data:/smtp4dev
+      - ./email:/smtp4dev
     restart: unless-stopped
+    hostname: email.${DOMAIN_APP}
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
       - subdomain=email
       - traefik.http.routers.email.tls=true
@@ -104,6 +129,11 @@ services:
       - ./packages/auth-utils/src:/usr/app/packages/auth-utils/src
       - ./packages/ts-config:/usr/app/packages/ts-config
     restart: unless-stopped
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
       - subdomain=orm
       - traefik.http.routers.orm.tls=true
@@ -127,7 +157,7 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_HOST: ${SMTP_HOST}
-      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       AWS_REGION: ${AWS_DEFAULT_REGION}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
@@ -146,6 +176,11 @@ services:
       - ./packages/ts-config:/usr/app/packages/ts-config
     restart: unless-stopped
     hostname: api.${DOMAIN_APP}
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
       - subdomain=api
       - traefik.http.routers.api.tls=true
@@ -174,6 +209,11 @@ services:
       - ./packages/ts-config:/usr/app/packages/ts-config
     restart: unless-stopped
     hostname: admin.${DOMAIN_APP}
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
       - subdomain=admin
       - traefik.http.routers.admin.tls=true
@@ -183,3 +223,10 @@ volumes:
   letsencrypt:
   pgdata:
   email_data:
+
+networks:
+  ls:
+    ipam:
+      config:
+        # Specify the subnet range for IP address allocation
+        - subnet: 10.0.2.0/24

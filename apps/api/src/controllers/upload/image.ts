@@ -2,7 +2,7 @@ import type { FastifyPluginCallback } from "fastify"
 import imageSize from "image-size"
 
 import { getObjectUrl, uploadObject } from "@webapp/aws"
-import { getEnhancedPrisma } from "@webapp/orm"
+import { getEnhancedPrisma, getObjectKey } from "@webapp/orm"
 
 export const image: FastifyPluginCallback = async function (app) {
   app.post("", async function (req, rep) {
@@ -17,7 +17,7 @@ export const image: FastifyPluginCallback = async function (app) {
     }
     // Get required properties from multipart file
     const { filename, mimetype } = data
-    const key = `images/${filename}`
+    const key = getObjectKey("Image", filename)
     const buffer = await data.toBuffer()
     // Upload file to s3
     await uploadObject(key, buffer)

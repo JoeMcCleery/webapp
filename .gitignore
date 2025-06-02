@@ -10,7 +10,11 @@ node_modules
 dist
 
 # localstack
-/localstack/persist
+localstack
+!localstack/init
+
+# email
+email
 
 # turborepo
 .turbo
