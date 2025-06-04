@@ -1,5 +1,7 @@
 <template>
   <UContainer class="p4 md:p-8">
+    <UserProfileImage />
+
     <table v-if="auth.user">
       <tbody>
         <tr v-for="data in Object.entries(auth.user)">
@@ -8,8 +10,6 @@
         </tr>
       </tbody>
     </table>
-
-    <FormProfileImage />
 
     <div class="flex flex-col items-start gap-2">
       <ButtonPasswordReset />

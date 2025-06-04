@@ -126,5 +126,6 @@ const removeFile = (index: number) => {
 
 defineExpose({
   inputRef: inputRef.value?.inputRef,
+  openInput: () => openInput(),
 })
 </script>
