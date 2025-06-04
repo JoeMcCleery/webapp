@@ -4,16 +4,16 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "syncpack": "alpha"
   },
   "engines": {
     "node": ">=22.14.0"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "private": true,
   "scripts": {
-    "syncpack:fix": "syncpack fix && syncpack format",
+    "syncpack:fix": "syncpack fix --dependency-types dev,peer,prod,engines,packageManager && syncpack format",
     "syncpack:update": "syncpack update"
   }
 }
