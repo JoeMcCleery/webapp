@@ -14,7 +14,7 @@ localstack
 !localstack/init
 
 # email
-email
+/email
 
 # turborepo
 .turbo

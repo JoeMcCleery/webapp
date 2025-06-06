@@ -2,7 +2,6 @@
   "name": "@webapp/api",
   "version": "1.0.0",
   "dependencies": {
-    "@autotelic/fastify-mail": "^0.8.0",
     "@fastify/auth": "^5.0.2",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.0.1",
@@ -19,6 +18,8 @@
     "fastify": "^5.3.3",
     "fastify-plugin": "^5.0.1",
     "image-size": "^2.0.2",
+    "nodemailer": "^7.0.3",
+    "nunjucks": "^3.2.4",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
@@ -32,5 +33,9 @@
   "scripts": {
     "dev": "NODE_ENV='development' tsx watch src/index.ts",
     "start": "NODE_ENV='production' tsx src/index.ts"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
+    "@types/nunjucks": "^3.2.6"
   }
 }

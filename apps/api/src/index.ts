@@ -6,6 +6,7 @@ import fastifyMultipart from "@fastify/multipart"
 import fastifySensible from "@fastify/sensible"
 import Fastify from "fastify"
 
+import { emailPlugin } from "./email"
 import { middleware } from "./middleware"
 import { routes } from "./routes"
 
@@ -40,6 +41,7 @@ const init = async function () {
       fileSize: 5000000,
     },
   })
+  app.register(emailPlugin)
 
   // Register middleware
   app.register(middleware)
