@@ -91,7 +91,7 @@ export const useAuthStore = defineStore("auth", () => {
   const logoutAll = async () => {
     await invalidateAllSessions()
     if (options.authenticationRequired) {
-      navigateTo(options.redirectRoute)
+      await navigateTo(options.redirectRoute)
     }
   }
 

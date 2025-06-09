@@ -1,8 +1,6 @@
-import type { FastifyInstance } from "fastify"
 import fp from "fastify-plugin"
-import Mail from "nodemailer/lib/mailer"
 
-import { sendMail } from "./nodemailer"
+import { transporter } from "./nodemailer"
 import { render } from "./nunjucks"
 
 export * from "./nodemailer"
@@ -10,23 +8,21 @@ export * from "./nunjucks"
 
 declare module "fastify" {
   interface FastifyInstance {
-    sendMail: typeof sendMail
-    renderView: typeof render
+    mail: typeof mail
   }
 }
 
-export const emailPlugin = fp((app) => {
-  app.decorate(
-    "sendMail",
-    async function (this: FastifyInstance, options: Mail.Options) {
-      return await sendMail(options)
-    },
-  )
+const mail = {
+  async sendOtpEmail(email: string, otpCode: string) {
+    const html = render("otp.njk", { otpCode })
+    return await transporter.sendMail({
+      to: email,
+      subject: "Your Password Reset Code",
+      html,
+    })
+  },
+}
 
-  app.decorate(
-    "renderView",
-    async function (this: FastifyInstance, name: string, context?: object) {
-      return render(name, context)
-    },
-  )
+export const emailPlugin = fp((app) => {
+  app.decorate("mail", mail)
 })

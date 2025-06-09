@@ -1,5 +1,5 @@
 <template>
-  <LayoutCentered>
+  <LayoutContainer centered>
     <FormSignup />
-  </LayoutCentered>
+  </LayoutContainer>
 </template>

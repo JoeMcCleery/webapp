@@ -1,5 +1,5 @@
 <template>
-  <UContainer class="p4 md:p-8">
+  <LayoutContainer>
     <UserProfileImage />
 
     <table v-if="auth.user">
@@ -16,7 +16,7 @@
       <ButtonLogout />
       <ButtonLogout all />
     </div>
-  </UContainer>
+  </LayoutContainer>
 </template>
 
 <script setup lang="ts">

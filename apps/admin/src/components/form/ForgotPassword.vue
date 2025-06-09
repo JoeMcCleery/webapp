@@ -28,10 +28,6 @@ import * as z from "zod"
 const router = useRouter()
 const auth = useAuthStore()
 
-if (auth.user) {
-  await navigateTo("/")
-}
-
 const schema = z.object({
   email: z.string().email("Invalid email"),
 })

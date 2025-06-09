@@ -44,10 +44,6 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
-if (auth.user) {
-  await navigateTo("/")
-}
-
 const schema = z.object({
   otpCode: z.string().array().length(6, "Must be 6 characters"),
 })

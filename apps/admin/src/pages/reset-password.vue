@@ -1,5 +1,5 @@
 <template>
-  <LayoutCentered>
+  <LayoutContainer centered>
     <FormResetPassword />
-  </LayoutCentered>
+  </LayoutContainer>
 </template>

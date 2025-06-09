@@ -46,10 +46,6 @@ import * as z from "zod"
 const router = useRouter()
 const auth = useAuthStore()
 
-if (auth.user) {
-  await navigateTo("/")
-}
-
 const schema = z.object({
   givenName: z.string().min(1, "Name is required"),
   familyName: z.string().optional(),

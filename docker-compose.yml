@@ -83,16 +83,16 @@ services:
     image: rnwood/smtp4dev
     container_name: ${PROJECT_PREFIX}_email
     environment:
-      ServerOptions__HostName: email.${DOMAIN_APP}
-      ServerOptions__TlsMode: StartTls
+      ServerOptions__HostName: ${SMTP_HOST}
       ServerOptions__Port: ${SMTP_PORT}
+      ServerOptions__TlsMode: StartTls
       ServerOptions__Users__0__Username: ${SMTP_USER}
       ServerOptions__Users__0__Password: ${SMTP_PASS}
       ServerOptions__Users__0__DefaultMailbox: Default
     volumes:
       - ./email:/smtp4dev
     restart: unless-stopped
-    hostname: email.${DOMAIN_APP}
+    hostname: ${SMTP_HOST}
     dns:
       # Set the DNS server to be the LocalStack container
       - 10.0.2.20
@@ -153,10 +153,10 @@ services:
     environment:
       DOMAIN_APP: ${DOMAIN_APP}
       DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
-      SMTP_HOST: ${SMTP_HOST}
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
       AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}

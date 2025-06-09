@@ -19,12 +19,8 @@ export const forgotPassword: FastifyPluginCallback = function (app) {
       if (process.env.NODE_ENV === "development") {
         console.log(`OTP CODE: ${otpCode}`)
       }
-      // TODO send email with password reset otp
-      await app.sendMail({
-        to: email,
-        subject: "test",
-        text: otpCode,
-      })
+      // Send email to user with OTP code
+      await app.mail.sendOtpEmail(email, otpCode)
     } else {
       console.log("Failed to create new password reset")
     }

@@ -1,5 +1,5 @@
 <template>
-  <LayoutCentered>
+  <LayoutContainer centered>
     <FormConfirmOTP />
-  </LayoutCentered>
+  </LayoutContainer>
 </template>

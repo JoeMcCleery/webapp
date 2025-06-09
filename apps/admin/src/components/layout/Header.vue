@@ -1,8 +1,8 @@
 <template>
   <header
-    class="bg-default/75 border-default sticky top-0 border-b backdrop-blur"
+    class="bg-default/75 border-default sticky top-0 z-10 border-b backdrop-blur"
   >
-    <UContainer class="flex items-center gap-2 p-4 sm:px-6">
+    <LayoutContainer class="flex items-center gap-2">
       <ButtonHome />
       <LayoutNavigation />
 
@@ -10,6 +10,6 @@
 
       <ButtonColourMode />
       <UserMenu />
-    </UContainer>
+    </LayoutContainer>
   </header>
 </template>
