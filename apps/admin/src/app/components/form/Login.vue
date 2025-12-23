@@ -1,24 +1,21 @@
 <template>
   <div class="grid w-full max-w-sm place-items-center gap-2">
     <UForm class="w-full" :schema="schema" :state="state" @submit="onSubmit">
-      <FormCard title="Signup">
-        <p>Enter your details below to create a new account.</p>
-
-        <UFormField label="Given Name" name="givenName" required>
-          <UInput v-model="state.givenName" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Family Name" name="familyName" hint="Optional">
-          <UInput v-model="state.familyName" class="w-full" />
-        </UFormField>
+      <FormCard title="Login">
+        <p>Enter your email and password to login.</p>
 
         <UFormField label="Email" name="email" required>
           <UInput v-model="state.email" class="w-full" />
         </UFormField>
 
-        <UFormField label="Password" name="password" required>
-          <InputPassword v-model="state.password" class="w-full" />
-        </UFormField>
+        <div>
+          <UFormField label="Password" name="password" required>
+            <InputPassword v-model="state.password" class="w-full" />
+          </UFormField>
+          <ULink class="text-sm" to="/forgot-password">
+            Forgotten password?
+          </ULink>
+        </div>
 
         <UFormField name="persist">
           <UCheckbox v-model="state.persist" label="Remember me" />
@@ -26,16 +23,17 @@
 
         <template #actions>
           <ButtonSubmit
-            text="Singup"
-            icon="i-lucide-user-round-plus"
+            icon="i-lucide-log-in"
             size="xl"
             class="flex w-full items-center justify-center"
-          />
+          >
+            Login
+          </ButtonSubmit>
         </template>
       </FormCard>
     </UForm>
 
-    <ULink to="/login"> Already have an account? Login </ULink>
+    <ULink to="/signup"> Don't have an account? Signup</ULink>
   </div>
 </template>
 
@@ -47,9 +45,7 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z.object({
-  givenName: z.string().min(1, "Name is required"),
-  familyName: z.string().optional(),
-  email: z.string().email("Invalid email"),
+  email: z.email(),
   password: z
     .string()
     .min(8, "Must be at least 8 characters")
@@ -59,17 +55,16 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  givenName: undefined,
-  familyName: undefined,
-  email: undefined,
-  password: undefined,
+const state = reactive<Schema>({
+  email: "",
+  password: "",
   persist: false,
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  console.log("Login submit", event.data)
   await catchErrorAsToast(async () => {
-    await auth.signup(event.data)
+    await auth.login(event.data)
     router.push("/")
   })
 }

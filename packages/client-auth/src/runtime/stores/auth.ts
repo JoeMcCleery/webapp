@@ -1,10 +1,9 @@
-import { navigateTo } from "nuxt/app"
+import { navigateTo, useNuxtApp, useRequestHeaders } from "nuxt/app"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 
 import type { AuthUser } from "@webapp/orm"
 
-import useAuthFetch from "../composables/useAuthFetch"
 import useAuthOptions from "../composables/useAuthOptions"
 
 const useAuthUserStore = defineStore("auth-user", () => {
@@ -41,6 +40,8 @@ export const useAuthStore = defineStore("auth", () => {
   // Get csrf store
   const csrfStore = useCsrfStore()
 
+  const nuxtApp = useNuxtApp()
+
   // Login using email and password
   const login = async (data: {
     email: string
@@ -50,7 +51,9 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const csrfToken = await useAuthFetch<string>(options.routes.login, {
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const csrfToken = await $authFetch<string>(options.routes.login, {
+      method: "POST",
       body: data,
     })
     // Set csrf token
@@ -63,7 +66,8 @@ export const useAuthStore = defineStore("auth", () => {
   const invalidateSession = async () => {
     // Invalidate session if there is a user
     if (authUserStore.user) {
-      await useAuthFetch(options.routes.logout)
+      const $authFetch = nuxtApp.$authFetch as typeof $fetch
+      await $authFetch(options.routes.logout, { method: "POST" })
       authUserStore.setAuthUser(null)
       csrfStore.setCsrfToken(null)
     }
@@ -81,7 +85,8 @@ export const useAuthStore = defineStore("auth", () => {
   const invalidateAllSessions = async () => {
     // Invalidate all sessions if there is a user
     if (authUserStore.user) {
-      await useAuthFetch(options.routes.logoutAll)
+      const $authFetch = nuxtApp.$authFetch as typeof $fetch
+      await $authFetch(options.routes.logoutAll)
       authUserStore.setAuthUser(null)
       csrfStore.setCsrfToken(null)
     }
@@ -97,7 +102,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Try fetch the logged in user from the server
   const fetchUser = async () => {
-    const user = await useAuthFetch<AuthUser | null>(options.routes.fetchUser)
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const user = await $authFetch<AuthUser | null>(options.routes.fetchUser, {
+      method: "POST",
+    })
     authUserStore.setAuthUser(user)
     return user
   }
@@ -113,7 +121,9 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const csrfToken = await useAuthFetch<string>(options.routes.signup, {
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const csrfToken = await $authFetch<string>(options.routes.signup, {
+      method: "POST",
       body: data,
     })
     // Set csrf token
@@ -124,9 +134,11 @@ export const useAuthStore = defineStore("auth", () => {
 
   const forgotPassword = async (data: { email: string }) => {
     // Send request
-    const resetPasswordToken = await useAuthFetch<string>(
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const resetPasswordToken = await $authFetch<string>(
       options.routes.forgotPassword,
       {
+        method: "POST",
         body: data,
       },
     )
@@ -135,7 +147,9 @@ export const useAuthStore = defineStore("auth", () => {
 
   const confirmOTPCode = async (data: { otpCode: string; token: string }) => {
     // Send request
-    const otpToken = await useAuthFetch<string>(options.routes.confirmOTPCode, {
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const otpToken = await $authFetch<string>(options.routes.confirmOTPCode, {
+      method: "POST",
       body: data,
     })
     return otpToken
@@ -151,7 +165,9 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate existing session
     await invalidateSession()
     // Send request
-    const csrfToken = await useAuthFetch<string>(options.routes.resetPassword, {
+    const $authFetch = nuxtApp.$authFetch as typeof $fetch
+    const csrfToken = await $authFetch<string>(options.routes.resetPassword, {
+      method: "POST",
       body: data,
     })
     // Set csrf token

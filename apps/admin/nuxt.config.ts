@@ -1,21 +1,24 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const apiDomain = `api.${process.env.NUXT_DOMAIN_APP || "api.app.localhost"}`
+
 export default defineNuxtConfig({
-  compatibilityDate: "2024-11-01",
-  devtools: {
-    enabled: true,
-    timeline: {
-      enabled: true,
+  workspaceDir: "../../",
+  srcDir: "src/app/",
+  serverDir: "src/server/",
+  dir: {
+    modules: "src/modules",
+    public: "src/public",
+  },
+  vite: {
+    server: {
+      allowedHosts: [`.${process.env.NUXT_DOMAIN_APP}`],
     },
   },
-  workspaceDir: "../../",
-  srcDir: "src/",
   modules: ["@nuxt/ui", "@nuxt/image", "@webapp/client-auth"],
   css: ["~/assets/css/main.css"],
-  runtimeConfig: {
-    domainApp: process.env.NUXT_DOMAIN_APP || "",
-  },
   auth: {
-    apiUrl: `https://api.${process.env.NUXT_DOMAIN_APP}`,
-    serverApiUrl: `http://api.${process.env.NUXT_DOMAIN_APP}:3000`,
+    apiUrl: `https://${apiDomain}`,
+    serverApiUrl: `http://${apiDomain}:3000`,
   },
 })

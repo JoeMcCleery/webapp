@@ -32,7 +32,7 @@
       </FormCard>
     </UForm>
 
-    <ULink to="/login"> Remember password? Login </ULink>
+    <ULink v-if="!auth.user" to="/login"> Remember password? Login </ULink>
   </div>
 </template>
 
@@ -50,13 +50,13 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  otpCode: undefined,
+const state = reactive<Schema>({
+  otpCode: [],
 })
 
-const toUpperCase = (value?: string[]) => {
+const toUpperCase = (value: string[]) => {
   nextTick(() => {
-    state.otpCode = value?.map((v) => v.toUpperCase())
+    state.otpCode = value.map((v) => v.toUpperCase())
   })
 }
 

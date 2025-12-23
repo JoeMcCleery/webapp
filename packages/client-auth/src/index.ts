@@ -4,7 +4,6 @@ import {
   addRouteMiddleware,
   createResolver,
   defineNuxtModule,
-  installModule,
 } from "@nuxt/kit"
 import { defu } from "defu"
 
@@ -65,15 +64,17 @@ export default defineNuxtModule<ModuleOptions>({
       resetPassword: "/auth/reset-password",
     },
   },
+  moduleDependencies: {
+    "@pinia/nuxt": {
+      version: "^0.11.3",
+    },
+  },
   async setup(inlineOptions, nuxt) {
     // Expose inline options to nuxt runtime config (values set in runtime config have priority)
     const moduleOptions = defu(nuxt.options.runtimeConfig.public.auth || {}, {
       ...inlineOptions,
     })
     nuxt.options.runtimeConfig.public.auth = moduleOptions
-
-    // Install pinia module
-    await installModule("@pinia/nuxt")
 
     const resolver = createResolver(import.meta.url)
 
@@ -85,6 +86,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Add trpc client plugin
     addPlugin(resolver.resolve("./runtime/plugins/trpc"))
+
+    // Add authFetch plugin
+    addPlugin(resolver.resolve("./runtime/plugins/authFetch"))
 
     // Add auth middleware
     addRouteMiddleware(

@@ -76,9 +76,9 @@ const schema = z
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  newPassword: undefined,
-  confirmPassword: undefined,
+const state = reactive<Schema>({
+  newPassword: "",
+  confirmPassword: "",
   persist: false,
 })
 

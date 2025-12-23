@@ -9,5 +9,7 @@
 
 <script setup lang="ts">
 const { $trpc } = useNuxtApp()
-const users = await $trpc.user.findMany.query()
+const users = await $trpc.user.findMany.query({
+  include: { image: true },
+})
 </script>

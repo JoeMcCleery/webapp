@@ -1,16 +1,13 @@
-import type { NitroFetchOptions } from "nitropack"
-import { useNuxtApp } from "nuxt/app"
+import type { NitroFetchRequest } from "nitropack"
+import { useFetch, useNuxtApp } from "nuxt/app"
+import type { UseFetchOptions } from "nuxt/app"
 
-import authFetch from "./authFetch"
-
-export default async function useAuthFetch<T>(
-  request: string,
-  opts: NitroFetchOptions<string> = {},
+export default function useAuthFetch<T, E>(
+  request: NitroFetchRequest,
+  opts?: UseFetchOptions<T>,
 ) {
-  // Get nuxt instance
-  const nuxtApp = useNuxtApp()
-  // Fetch
-  const res = await nuxtApp.runWithContext(() => authFetch<T>(request, opts))
-  // Return result data
-  return res._data as T
+  return useFetch(request, {
+    ...opts,
+    $fetch: useNuxtApp().$authFetch as typeof $fetch,
+  })
 }

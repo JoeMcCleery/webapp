@@ -29,13 +29,13 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const schema = z.object({
-  email: z.string().email("Invalid email"),
+  email: z.email(),
 })
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  email: undefined,
+const state = reactive<Schema>({
+  email: "",
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

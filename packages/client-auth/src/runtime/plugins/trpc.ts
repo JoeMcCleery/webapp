@@ -1,10 +1,7 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client"
-import type { NitroFetchOptions } from "nitropack"
 import { defineNuxtPlugin } from "nuxt/app"
 
 import type { AppRouter } from "@webapp/orm"
-
-import authFetch from "../composables/authFetch"
 
 export default defineNuxtPlugin({
   name: "trpc",
@@ -12,15 +9,17 @@ export default defineNuxtPlugin({
     const trpc = createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: "",
-          fetch(url, options) {
-            return nuxtApp.runWithContext(() =>
-              authFetch(`/trpc${url}`, {
+          url: "/trpc",
+          fetch(request, options) {
+            return (nuxtApp.$authFetch as typeof $fetch)
+              .raw(request.toString(), {
                 ...options,
-                method: options?.method as NitroFetchOptions<string>["method"],
-                ignoreResponseError: true,
-              }),
-            )
+              })
+              .then((res) => ({
+                ...res,
+                headers: res.headers,
+                json: () => Promise.resolve(res._data),
+              }))
           },
         }),
       ],
