@@ -9,7 +9,7 @@
       <div class="w-full"></div>
 
       <ButtonColourMode />
-      <UserMenu />
+      <LayoutSidePane />
     </LayoutContainer>
   </header>
 </template>
