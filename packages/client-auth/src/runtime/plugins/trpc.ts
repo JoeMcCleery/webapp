@@ -10,8 +10,11 @@ export default defineNuxtPlugin({
       links: [
         httpBatchLink({
           url: "/trpc",
-          fetch(request, options) {
-            return (nuxtApp.$authFetch as typeof $fetch)
+          async fetch(request, options) {
+            const authFetch = await nuxtApp.runWithContext(
+              nuxtApp.$authFetch as () => typeof $fetch,
+            )
+            return authFetch
               .raw(request.toString(), {
                 ...options,
               })

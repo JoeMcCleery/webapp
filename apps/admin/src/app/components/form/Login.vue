@@ -62,7 +62,6 @@ const state = reactive<Schema>({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log("Login submit", event.data)
   await catchErrorAsToast(async () => {
     await auth.login(event.data)
     router.push("/")
