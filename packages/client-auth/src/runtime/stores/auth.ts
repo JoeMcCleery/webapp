@@ -86,7 +86,7 @@ export const useAuthStore = defineStore("auth", () => {
     // Invalidate all sessions if there is a user
     if (authUserStore.user) {
       const authFetch = nuxtApp.$authFetch as () => typeof $fetch
-      await authFetch()(options.routes.logoutAll)
+      await authFetch()(options.routes.logoutAll, { method: "POST" })
       authUserStore.setAuthUser(null)
       csrfStore.setCsrfToken(null)
     }

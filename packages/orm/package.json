@@ -20,7 +20,7 @@
     "src"
   ],
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.26.1",
+  "packageManager": "pnpm@10.26.2",
   "prisma": {
     "schema": "./src/prisma/schema.prisma",
     "seed": "tsx src/prisma/seed.ts"
