@@ -2,8 +2,8 @@
   "name": "@webapp/aws",
   "version": "1.0.0",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.958.0",
-    "@aws-sdk/s3-request-presigner": "^3.958.0"
+    "@aws-sdk/client-s3": "^3.965.0",
+    "@aws-sdk/s3-request-presigner": "^3.965.0"
   },
   "devDependencies": {
     "@webapp/ts-config": "workspace:*"
@@ -12,7 +12,7 @@
     "src"
   ],
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.27.0",
   "private": true,
   "type": "module"
 }
