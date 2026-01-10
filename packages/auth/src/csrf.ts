@@ -1,15 +1,9 @@
 import { hmac } from "@oslojs/crypto/hmac"
-import { SHA256 } from "@oslojs/crypto/sha2"
+import { SHA3_256 } from "@oslojs/crypto/sha3"
 import { constantTimeEqual } from "@oslojs/crypto/subtle"
 import { decodeHex, encodeHexLowerCase } from "@oslojs/encoding"
 
 import { generateUniqueToken } from "@webapp/auth-utils"
-
-export function createCSRFToken(sessionId: string) {
-  const randomToken = generateUniqueToken()
-  const newHMAC = createHMAC(sessionId, randomToken)
-  return `${encodeHexLowerCase(newHMAC)}.${randomToken}`
-}
 
 function createHMAC(sessionId: string, randomToken: string) {
   const textEncoder = new TextEncoder()
@@ -17,10 +11,16 @@ function createHMAC(sessionId: string, randomToken: string) {
   const message = textEncoder.encode(
     `${sessionId.length}!${sessionId}!${randomToken.length}!${randomToken}`,
   )
-  return hmac(SHA256, secret, message)
+  return hmac(SHA3_256, secret, message)
 }
 
-export function validateCSRF(sessionId: string, csrfToken: string) {
+export function createCSRFToken(sessionId: string) {
+  const randomToken = generateUniqueToken()
+  const newHMAC = createHMAC(sessionId, randomToken)
+  return `${encodeHexLowerCase(newHMAC)}.${randomToken}`
+}
+
+export function validateCSRFToken(sessionId: string, csrfToken: string) {
   const csrfParts = csrfToken.split(".")
   const hmacFromCSRF = decodeHex(csrfParts[0])
   const randomToken = csrfParts[1]

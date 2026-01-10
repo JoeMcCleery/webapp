@@ -1,8 +1,6 @@
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding"
+import * as crypto from "crypto"
 
 export function generateUniqueToken() {
-  const bytes = new Uint8Array(20)
-  crypto.getRandomValues(bytes)
-  const token = encodeBase32LowerCaseNoPadding(bytes)
-  return token
+  return encodeBase32LowerCaseNoPadding(crypto.randomBytes(20))
 }

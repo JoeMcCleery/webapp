@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@oslojs/crypto": "^1.0.1",
-    "@oslojs/encoding": "^1.1.0"
+    "@oslojs/encoding": "^1.1.0",
+    "argon2": "^0.44.0"
   },
   "devDependencies": {
     "@webapp/ts-config": "workspace:*",

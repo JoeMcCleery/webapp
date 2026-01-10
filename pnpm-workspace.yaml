@@ -4,6 +4,7 @@ packages:
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - argon2
   - esbuild
   - sharp
   - vue-demi
