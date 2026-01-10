@@ -32,7 +32,7 @@
     "tsconfig.json"
   ],
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.0",
   "private": true,
   "scripts": {
     "dev": "NODE_ENV='development' tsx watch src/index.ts",

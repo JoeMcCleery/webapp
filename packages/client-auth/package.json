@@ -20,7 +20,7 @@
     "src"
   ],
   "main": "src/index.ts",
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.0",
   "peerDependencies": {
     "@pinia/nuxt": "^0.11.3",
     "@trpc/client": "^11.8.1",

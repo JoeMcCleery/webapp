@@ -26,11 +26,6 @@
       "label": "Use root engine versions",
       "dependencyTypes": ["engines"],
       "snapTo": ["webapp"]
-    },
-    {
-      "label": "Use prisma version supported by zenstack",
-      "dependencies": ["prisma", "@prisma/**"],
-      "pinVersion": "~6.18.0"
     }
   ],
   "semverGroups": [

@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "prisma.prisma",
     "zenstack.zenstack",
     "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode"

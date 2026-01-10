@@ -1,12 +1,24 @@
 {
   "name": "@webapp/orm",
   "version": "1.0.0",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "drizzle-orm": "^0.45.1",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0",
+    "@webapp/ts-config": "workspace:*",
+    "drizzle-kit": "^0.31.8",
+    "tsx": "^4.21.0"
+  },
   "files": [
     "src"
   ],
   "main": "src/index.ts",
+  "packageManager": "pnpm@10.28.0",
   "private": true,
-  "scripts": {}
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  }
 }

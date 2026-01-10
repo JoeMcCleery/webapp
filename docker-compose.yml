@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.5
+    image: traefik:v3
     container_name: ${PROJECT_PREFIX}_traefik
     command:
       - --api.insecure=false
@@ -35,14 +35,14 @@ services:
 
   # Local dev only
   db:
-    image: postgres
+    image: postgres:18
     container_name: ${PROJECT_PREFIX}_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db:/var/lib/postgresql
     restart: unless-stopped
     dns:
       # Set the DNS server to be the LocalStack container
@@ -76,7 +76,7 @@ services:
       - traefik.http.routers.localstack.tls=true
       - traefik.http.routers.localstack.rule=Host(`localhost.localstack.cloud`) || HostRegexp(`^.+\.localhost\.localstack\.cloud$`)
       # - traefik.http.routers.localstack.tls.certresolver=le
-      - traefik.http.services.localstack-webapp.loadbalancer.server.port=443
+      - traefik.http.services.localstack.loadbalancer.server.port=443
 
   # Local dev only
   email:
@@ -90,7 +90,7 @@ services:
       ServerOptions__Users__0__Password: ${SMTP_PASS}
       ServerOptions__Users__0__DefaultMailbox: Default
     volumes:
-      - ./email:/smtp4dev
+      - email:/smtp4dev
     restart: unless-stopped
     hostname: ${SMTP_HOST}
     dns:
@@ -126,6 +126,7 @@ services:
     volumes:
       - ./packages/orm/src:/usr/app/packages/orm/src
       - ./packages/orm/package.json:/usr/app/packages/orm/package.json
+      - ./packages/orm/drizzle.config.ts:/usr/app/packages/orm/drizzle.config.ts
       - ./packages/auth-utils/src:/usr/app/packages/auth-utils/src
       - ./packages/ts-config:/usr/app/packages/ts-config
     restart: unless-stopped
@@ -134,10 +135,30 @@ services:
       - 10.0.2.20
     networks:
       - ls
+    # labels:
+    #   - subdomain=orm
+    #   - traefik.http.routers.orm.tls=true
+    #   - traefik.http.routers.orm.tls.certresolver=le
+
+  # Local dev only
+  pgadmin:
+    image: dpage/pgadmin4:9
+    container_name: ${PROJECT_PREFIX}_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    restart: unless-stopped
+    dns:
+      # Set the DNS server to be the LocalStack container
+      - 10.0.2.20
+    networks:
+      - ls
     labels:
-      - subdomain=orm
-      - traefik.http.routers.orm.tls=true
-      # - traefik.http.routers.orm.tls.certresolver=le
+      - subdomain=pgadmin
+      - traefik.http.routers.pgadmin.tls=true
+      # - traefik.http.routers.api.tls.certresolver=le
 
   api:
     build:
@@ -222,8 +243,9 @@ services:
 
 volumes:
   letsencrypt:
-  pgdata:
-  email_data:
+  db:
+  email:
+  pgadmin:
 
 networks:
   ls:

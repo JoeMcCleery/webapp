@@ -58,8 +58,7 @@ FROM base AS orm-dev
 WORKDIR /usr/app
 COPY --from=prebuild /usr/src/app/build .
 WORKDIR /usr/app/packages/orm
-EXPOSE 3000
-CMD [ "pnpm", "db:studio" ]
+CMD [ "sleep", "infinity" ]
 
 FROM base AS api-dev
 WORKDIR /usr/app
